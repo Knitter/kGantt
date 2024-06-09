@@ -1,0 +1,9 @@
+{
+    "name": "Knitter/kGantt",
+    "description": "",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["jquery","gantt"],
+    "homepage": "https://github.com/Knitter/kGantt",
+    "require": {}
+}
