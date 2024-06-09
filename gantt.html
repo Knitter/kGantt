@@ -3,7 +3,12 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Teamwork</title>
+    <title>kGantt</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
 
     <link rel=stylesheet href="platform.css" type="text/css">
     <link rel=stylesheet href="libs/jquery/dateField/jquery.dateField.css" type="text/css">
@@ -12,8 +17,10 @@
     <link rel=stylesheet href="ganttPrint.css" type="text/css" media="print">
     <link rel=stylesheet href="libs/jquery/valueSlider/mb.slider.css" type="text/css" media="print">
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <link rel=stylesheet href="demo.css" type="text/css">
+
+    <script src="libs/jquery/jquery-3.7.1.min.js"></script>
+    <script src="libs/jquery/jquery-ui.min.js"></script>
 
     <script src="libs/jquery/jquery.livequery.1.1.1.min.js"></script>
     <script src="libs/jquery/jquery.timers.js"></script>
@@ -31,7 +38,6 @@
     <script type="text/javascript" src="libs/jquery/svg/jquery.svg.min.js"></script>
     <script type="text/javascript" src="libs/jquery/svg/jquery.svgdom.1.8.js"></script>
 
-
     <script src="ganttUtilities.js"></script>
     <script src="ganttTask.js"></script>
     <script src="ganttDrawerSVG.js"></script>
@@ -39,63 +45,24 @@
     <script src="ganttGridEditor.js"></script>
     <script src="ganttMaster.js"></script>
 
-
-    <!--<script src="libs/profiling.js"></script>-->
     <!--<script type="text/javascript" src="ganttTestSuite.js"></script>-->
 </head>
 <body style="background-color: #fff;">
 
-
-<div id="ndo"
-     style="position:absolute;right:5px;top:5px;width:378px;padding:5px;background-color: #FFF5E6; border:1px solid #F9A22F; font-size:12px"
-     class="noprint">
-    This Gantt editor is free thanks to <a href="http://twproject.com" target="_blank">Twproject</a> where it can be
-    used on a complete and flexible project management solution.<br> Get your projects done! Give <a
-        href="http://twproject.com" target="_blank">Twproject a try now</a>.
-</div>
-<div id="workSpace"
-     style="padding:0px; overflow-y:auto; overflow-x:hidden;border:1px solid #e5e5e5;position:relative;margin:0 5px"></div>
-
-<style>
-    .resEdit {
-        padding: 15px;
-    }
-
-    .resLine {
-        width: 95%;
-        padding: 3px;
-        margin: 5px;
-        border: 1px solid #d0d0d0;
-    }
-
-    body {
-        overflow: hidden;
-    }
-
-    .ganttButtonBar h1 {
-        color: #000000;
-        font-weight: bold;
-        font-size: 28px;
-        margin-left: 10px;
-    }
-
-</style>
-
-<form id="gimmeBack" style="display:none;" action="../gimmeBack.jsp" method="post" target="_blank"><input type="hidden"
-                                                                                                          name="prj"
-                                                                                                          id="gimBaPrj">
-</form>
+<div id="workSpace"></div>
 
 <script type="text/javascript">
 
-    var ge;
+    //TODO: Declaration was missing, default to empty string only to clear JS error.
+    const contextPath = "";
+
+    let ge;
     $(function () {
-        var canWrite = true; //this is the default for test purposes
+        const canWrite = true; //this is the default for test purposes
 
         // here starts gantt initialization
         ge = new GanttMaster();
         ge.set100OnClose = true;
-
         ge.shrinkParent = true;
 
         ge.init($("#workSpace"));
@@ -103,18 +70,15 @@
 
         //in order to force compute the best-fitting zoom level
         delete ge.gantt.zoom;
-
-        var project = loadFromLocalStorage();
-
-        if (!project.canWrite)
+        const project = loadFromLocalStorage();
+        if (!project.canWrite) {
             $(".ganttButtonBar button.requireWrite").attr("disabled", "true");
+        }
 
         ge.loadProject(project);
         ge.checkpoint(); //empty the undo stack
-
         initializeHistoryManagement(ge.tasks[0].id);
     });
-
 
     function getDemoProject() {
         //console.debug("getDemoProject")
@@ -319,15 +283,13 @@
             ], "canWrite": true, "canDelete": true, "canWriteOnParent": true, canAdd: true
         }
 
-
         //actualize data
-        var offset = new Date().getTime() - ret.tasks[0].start;
-        for (var i = 0; i < ret.tasks.length; i++) {
+        const offset = new Date().getTime() - ret.tasks[0].start;
+        for (let i = 0; i < ret.tasks.length; i++) {
             ret.tasks[i].start = ret.tasks[i].start + offset;
         }
         return ret;
     }
-
 
     function loadGanttFromServer(taskId, callback) {
 
@@ -361,8 +323,7 @@
     }
 
     function upload(uploadedFile) {
-        var fileread = new FileReader();
-
+        const fileread = new FileReader();
         fileread.onload = function (e) {
             var content = e.target.result;
             var intern = JSON.parse(content); // Array of Objects.
@@ -370,23 +331,18 @@
 
             ge.loadProject(intern);
             ge.checkpoint(); //empty the undo stack
-
         };
 
         fileread.readAsText(uploadedFile);
     }
 
     function saveGanttOnServer() {
-
         //this is a simulation: save data to the local storage or to the textarea
         //saveInLocalStorage();
 
         var prj = ge.saveProject();
-
         download(JSON.stringify(prj, null, '\t'), "MyProject.json", "application/json");
-
         /*
-
         delete prj.resources;
         delete prj.roles;
 
@@ -432,12 +388,13 @@
 
     // Function to download data to a file
     function download(data, filename, type) {
-        var file = new Blob([data], {type: type});
-        if (window.navigator.msSaveOrOpenBlob) // IE10+
+        const file = new Blob([data], {type: type});
+        if (window.navigator.msSaveOrOpenBlob) {// IE10+
             window.navigator.msSaveOrOpenBlob(file, filename);
-        else { // Others
-            var a = document.createElement("a"),
-                url = URL.createObjectURL(file);
+        } else { // Others
+            const a = document.createElement("a");
+            const url = URL.createObjectURL(file);
+
             a.href = url;
             a.download = filename;
             document.body.appendChild(a);
@@ -453,24 +410,13 @@
         clearGantt();
     }
 
-
     function clearGantt() {
         ge.reset();
     }
 
     //-------------------------------------------  Get project file as JSON (used for migrate project from gantt to Teamwork) ------------------------------------------------------
-    function getFile() {
-        $("#gimBaPrj").val(JSON.stringify(ge.saveProject()));
-        $("#gimmeBack").submit();
-        $("#gimBaPrj").val("");
-
-        /*  var uriContent = "data:text/html;charset=utf-8," + encodeURIComponent(JSON.stringify(prj));
-         neww=window.open(uriContent,"dl");*/
-    }
-
-
     function loadFromLocalStorage() {
-        var ret;
+        let ret;
         if (localStorage) {
             if (localStorage.getObject("teamworkGantDemo")) {
                 ret = localStorage.getObject("teamworkGantDemo");
@@ -484,15 +430,12 @@
         return ret;
     }
 
-
     function saveInLocalStorage() {
-        var prj = ge.saveProject();
-
+        const prj = ge.saveProject();
         if (localStorage) {
             localStorage.setObject("teamworkGantDemo", prj);
         }
     }
-
 
     //-------------------------------------------  Open a black popup for managing resources. This is only an axample of implementation (usually resources come from server) ------------------------------------------------------
     function editResources() {
@@ -541,144 +484,138 @@
             }
 
             //loop on new rows
-            var cnt = 0
+            let cnt = 0;
             resourceEditor.find("[resId=new]").each(function () {
                 cnt++;
-                var row = $(this);
-                var name = row.find("input[name]").val();
-                if (name && name != "")
+                const row = $(this);
+                const name = row.find("input[name]").val();
+                if (name && name != "") {
                     newRes.push(new Resource("tmp_" + new Date().getTime() + "_" + cnt, name));
+                }
             });
 
             ge.resources = newRes;
-
             closeBlackPopup();
             ge.redraw();
         });
 
-
-        var ndo = createModalPopup(400, 500).append(resourceEditor);
+        const ndo = createModalPopup(400, 500).append(resourceEditor);
     }
 
     function initializeHistoryManagement(taskId) {
-
         //retrieve from server the list of history points in millisecond that represent the instant when the data has been recorded
         //response: {ok:true, historyPoints: [1498168800000, 1498600800000, 1498687200000, 1501538400000, …]}
-        $.getJSON(contextPath + "/applications/teamwork/task/taskAjaxController.jsp", {
-            CM: "GETGANTTHISTPOINTS",
-            OBJID: taskId
-        }, function (response) {
-
-            //if there are history points
-            if (response.ok == true && response.historyPoints && response.historyPoints.length > 0) {
-
-                //add show slider button on button bar
-                var histBtn = $("<button>").addClass("button textual icon lreq30 lreqLabel").attr("title", "SHOW_HISTORY").append("<span class=\"teamworkIcon\">&#x60;</span>");
-
-                //clicking it
-                histBtn.click(function () {
-                    var el = $(this);
-                    var ganttButtons = $(".ganttButtonBar .buttons");
-
-                    //is it already on?
-                    if (!ge.element.is(".historyOn")) {
-                        ge.element.addClass("historyOn");
-                        ganttButtons.find(".requireCanWrite").hide();
-
-                        //load the history points from server again
-                        showSavingMessage();
-                        $.getJSON(contextPath + "/applications/teamwork/task/taskAjaxController.jsp", {
-                            CM: "GETGANTTHISTPOINTS",
-                            OBJID: ge.tasks[0].id
-                        }, function (response) {
-                            jsonResponseHandling(response);
-                            hideSavingMessage();
-                            if (response.ok == true) {
-                                var dh = response.historyPoints;
-                                if (dh && dh.length > 0) {
-                                    //si crea il div per lo slider
-                                    var sliderDiv = $("<div>").prop("id", "slider").addClass("lreq30 lreqHide").css({
-                                        "display": "inline-block",
-                                        "width": "500px"
-                                    });
-                                    ganttButtons.append(sliderDiv);
-
-                                    var minVal = 0;
-                                    var maxVal = dh.length - 1;
-
-                                    $("#slider").show().mbSlider({
-                                        rangeColor: '#2f97c6',
-                                        minVal: minVal,
-                                        maxVal: maxVal,
-                                        startAt: maxVal,
-                                        showVal: false,
-                                        grid: 1,
-                                        formatValue: function (val) {
-                                            return new Date(dh[val]).format();
-                                        },
-                                        onSlideLoad: function (obj) {
-                                            this.onStop(obj);
-
-                                        },
-                                        onStart: function (obj) {
-                                        },
-                                        onStop: function (obj) {
-                                            var val = $(obj).mbgetVal();
-                                            showSavingMessage();
-                                            /**
-                                             * load the data history for that milliseconf from server
-                                             * response in this format {ok: true, baselines: {...}}
-                                             *
-                                             * baselines: {61707: {duration:1,endDate:1550271599998,id:61707,progress:40,startDate:1550185200000,status:"STATUS_WAITING",taskId:"3055"},
-                                             *            {taskId:{duration:in days,endDate:in millis,id:history record id,progress:in percent,startDate:in millis,status:task status,taskId:"3055"}....}}                     */
-
-                                            $.getJSON(contextPath + "/applications/teamwork/task/taskAjaxController.jsp", {
-                                                CM: "GETGANTTHISTORYAT",
-                                                OBJID: ge.tasks[0].id,
-                                                millis: dh[val]
-                                            }, function (response) {
-                                                jsonResponseHandling(response);
-                                                hideSavingMessage();
-                                                if (response.ok) {
-                                                    ge.baselines = response.baselines;
-                                                    ge.showBaselines = true;
-                                                    ge.baselineMillis = dh[val];
-                                                    ge.redraw();
-                                                }
-                                            })
-
-                                        },
-                                        onSlide: function (obj) {
-                                            clearTimeout(obj.renderHistory);
-                                            var self = this;
-                                            obj.renderHistory = setTimeout(function () {
-                                                self.onStop(obj);
-                                            }, 200)
-
-                                        }
-                                    });
-                                }
-                            }
-                        });
-
-
-                        // closing the history
-                    } else {
-                        //remove the slider
-                        $("#slider").remove();
-                        ge.element.removeClass("historyOn");
-                        if (ge.permissions.canWrite)
-                            ganttButtons.find(".requireCanWrite").show();
-
-                        ge.showBaselines = false;
-                        ge.baselineMillis = undefined;
-                        ge.redraw();
-                    }
-
-                });
-                $("#saveGanttButton").before(histBtn);
-            }
-        })
+        // $.getJSON(contextPath + "/applications/teamwork/task/taskAjaxController.jsp", {
+        //     CM: "GETGANTTHISTPOINTS",
+        //     OBJID: taskId
+        // }, function (response) {
+        //
+        //     //if there are history points
+        //     if (response.ok == true && response.historyPoints && response.historyPoints.length > 0) {
+        //
+        //         //add show slider button on button bar
+        //         var histBtn = $("<button>").addClass("button textual icon lreq30 lreqLabel").attr("title", "SHOW_HISTORY").append("<span class=\"teamworkIcon\">&#x60;</span>");
+        //
+        //         //clicking it
+        //         histBtn.click(function () {
+        //             var el = $(this);
+        //             var ganttButtons = $(".ganttButtonBar .buttons");
+        //
+        //             //is it already on?
+        //             if (!ge.element.is(".historyOn")) {
+        //                 ge.element.addClass("historyOn");
+        //                 ganttButtons.find(".requireCanWrite").hide();
+        //
+        //                 //load the history points from server again
+        //                 showSavingMessage();
+        //                 $.getJSON(contextPath + "/applications/teamwork/task/taskAjaxController.jsp", {
+        //                     CM: "GETGANTTHISTPOINTS",
+        //                     OBJID: ge.tasks[0].id
+        //                 }, function (response) {
+        //                     jsonResponseHandling(response);
+        //                     hideSavingMessage();
+        //                     if (response.ok == true) {
+        //                         var dh = response.historyPoints;
+        //                         if (dh && dh.length > 0) {
+        //                             //si crea il div per lo slider
+        //                             var sliderDiv = $("<div>").prop("id", "slider").addClass("lreq30 lreqHide").css({
+        //                                 "display": "inline-block",
+        //                                 "width": "500px"
+        //                             });
+        //                             ganttButtons.append(sliderDiv);
+        //
+        //                             var minVal = 0;
+        //                             var maxVal = dh.length - 1;
+        //
+        //                             $("#slider").show().mbSlider({
+        //                                 rangeColor: '#2f97c6',
+        //                                 minVal: minVal,
+        //                                 maxVal: maxVal,
+        //                                 startAt: maxVal,
+        //                                 showVal: false,
+        //                                 grid: 1,
+        //                                 formatValue: function (val) {
+        //                                     return new Date(dh[val]).format();
+        //                                 },
+        //                                 onSlideLoad: function (obj) {
+        //                                     this.onStop(obj);
+        //                                 },
+        //                                 onStart: function (obj) {
+        //                                 },
+        //                                 onStop: function (obj) {
+        //                                     var val = $(obj).mbgetVal();
+        //                                     showSavingMessage();
+        //                                     /**
+        //                                      * load the data history for that milliseconf from server
+        //                                      * response in this format {ok: true, baselines: {...}}
+        //                                      *
+        //                                      * baselines: {61707: {duration:1,endDate:1550271599998,id:61707,progress:40,startDate:1550185200000,status:"STATUS_WAITING",taskId:"3055"},
+        //                                      *            {taskId:{duration:in days,endDate:in millis,id:history record id,progress:in percent,startDate:in millis,status:task status,taskId:"3055"}....}}                     */
+        //
+        //                                     $.getJSON(contextPath + "/applications/teamwork/task/taskAjaxController.jsp", {
+        //                                         CM: "GETGANTTHISTORYAT",
+        //                                         OBJID: ge.tasks[0].id,
+        //                                         millis: dh[val]
+        //                                     }, function (response) {
+        //                                         jsonResponseHandling(response);
+        //                                         hideSavingMessage();
+        //                                         if (response.ok) {
+        //                                             ge.baselines = response.baselines;
+        //                                             ge.showBaselines = true;
+        //                                             ge.baselineMillis = dh[val];
+        //                                             ge.redraw();
+        //                                         }
+        //                                     })
+        //                                 },
+        //                                 onSlide: function (obj) {
+        //                                     clearTimeout(obj.renderHistory);
+        //                                     var self = this;
+        //                                     obj.renderHistory = setTimeout(function () {
+        //                                         self.onStop(obj);
+        //                                     }, 200)
+        //                                 }
+        //                             });
+        //                         }
+        //                     }
+        //                 });
+        //
+        //                 // closing the history
+        //             } else {
+        //                 //remove the slider
+        //                 $("#slider").remove();
+        //                 ge.element.removeClass("historyOn");
+        //                 if (ge.permissions.canWrite)
+        //                     ganttButtons.find(".requireCanWrite").show();
+        //
+        //                 ge.showBaselines = false;
+        //                 ge.baselineMillis = undefined;
+        //                 ge.redraw();
+        //             }
+        //
+        //         });
+        //         $("#saveGanttButton").before(histBtn);
+        //     }
+        // })
     }
 
     function showBaselineInfo(event, element) {
@@ -688,17 +625,13 @@
             $(element).hideBalloon();
         })
     }
-
 </script>
-
 
 <div id="gantEditorTemplates" style="display:none;">
     <div class="__template__" type="GANTBUTTONS">
         <!--
         <div class="ganttButtonBar noprint">
           <div class="buttons">
-            <a href="https://gantt.twproject.com/"><img src="res/twGanttLogo.png" alt="Twproject" align="absmiddle" style="max-width: 136px; padding-right: 15px"></a>
-
             <button onclick="$('#workSpace').trigger('undo.gantt');return false;" class="button textual icon requireCanWrite" title="undo"><span class="teamworkIcon">&#39;</span></button>
             <button onclick="$('#workSpace').trigger('redo.gantt');return false;" class="button textual icon requireCanWrite" title="redo"><span class="teamworkIcon">&middot;</span></button>
             <span class="ganttButtonSeparator requireCanWrite requireCanAdd"></span>
@@ -818,7 +751,6 @@
   </div>
   --></div>
 
-
     <div class="__template__" type="CHANGE_STATUS"><!--
     <div class="taskStatusBox">
     <div class="taskStatus cvcColorSquare" status="STATUS_ACTIVE" title="Active"></div>
@@ -829,7 +761,6 @@
     <div class="taskStatus cvcColorSquare" status="STATUS_UNDEFINED" title="Undefined"></div>
     </div>
   --></div>
-
 
     <div class="__template__" type="TASK_EDITOR"><!--
   <div class="ganttTaskEditor">
@@ -909,7 +840,6 @@
   </div>
   --></div>
 
-
     <div class="__template__" type="ASSIGNMENT_ROW"><!--
   <tr taskId="(#=obj.task.id#)" assId="(#=obj.assig.id#)" class="assigEditRow" >
     <td ><select name="resourceId"  class="formElements" (#=obj.assig.id.indexOf("tmp_")==0?"":"disabled"#) ></select></td>
@@ -918,7 +848,6 @@
     <td align="center"><span class="teamworkIcon delAssig del" style="cursor: pointer">d</span></td>
   </tr>
   --></div>
-
 
     <div class="__template__" type="RESOURCE_EDITOR"><!--
   <div class="resourceEditor" style="padding: 5px;">
@@ -935,15 +864,13 @@
   </div>
   --></div>
 
-
     <div class="__template__" type="RESOURCE_ROW"><!--
   <tr resId="(#=obj.id#)" class="resRow" >
     <td ><input type="text" name="name" value="(#=obj.name#)" style="width:100%;" class="formElements"></td>
     <td align="center"><span class="teamworkIcon delRes del" style="cursor: pointer">d</span></td>
   </tr>
-  --></div>
-
-
+  -->
+    </div>
 </div>
 <script type="text/javascript">
     $.JST.loadDecorator("RESOURCE_ROW", function (resTr, res) {
@@ -952,38 +879,40 @@
         });
     });
 
-    $.JST.loadDecorator("ASSIGNMENT_ROW", function (assigTr, taskAssig) {
-        var resEl = assigTr.find("[name=resourceId]");
-        var opt = $("<option>");
+    $.JST.loadDecorator("ASSIGNMENT_ROW", function (assignTr, taskAssign) {
+        let i;
+        const resEl = assignTr.find("[name=resourceId]");
+        let opt = $("<option>");
         resEl.append(opt);
-        for (var i = 0; i < taskAssig.task.master.resources.length; i++) {
-            var res = taskAssig.task.master.resources[i];
+        for (i = 0; i < taskAssign.task.master.resources.length; i++) {
+            const res = taskAssign.task.master.resources[i];
             opt = $("<option>");
             opt.val(res.id).html(res.name);
-            if (taskAssig.assig.resourceId == res.id)
+            if (taskAssign.assig.resourceId == res.id) {
                 opt.attr("selected", "true");
+            }
             resEl.append(opt);
         }
-        var roleEl = assigTr.find("[name=roleId]");
-        for (var i = 0; i < taskAssig.task.master.roles.length; i++) {
-            var role = taskAssig.task.master.roles[i];
-            var optr = $("<option>");
+
+        const roleEl = assignTr.find("[name=roleId]");
+        for (i = 0; i < taskAssign.task.master.roles.length; i++) {
+            const role = taskAssign.task.master.roles[i];
+            const optr = $("<option>");
             optr.val(role.id).html(role.name);
-            if (taskAssig.assig.roleId == role.id)
+            if (taskAssign.assig.roleId == role.id) {
                 optr.attr("selected", "true");
+            }
             roleEl.append(optr);
         }
 
-        if (taskAssig.task.master.permissions.canWrite && taskAssig.task.canWrite) {
-            assigTr.find(".delAssig").click(function () {
-                var tr = $(this).closest("[assId]").fadeOut(200, function () {
+        if (taskAssign.task.master.permissions.canWrite && taskAssign.task.canWrite) {
+            assignTr.find(".delAssig").click(function () {
+                const tr = $(this).closest("[assId]").fadeOut(200, function () {
                     $(this).remove()
                 });
             });
         }
-
     });
-
 
     function loadI18n() {
         GanttMaster.messages = {
@@ -1013,11 +942,10 @@
         };
     }
 
-
     function createNewResource(el) {
-        var row = el.closest("tr[taskid]");
-        var name = row.find("[name=resourceId_txt]").val();
-        var url = contextPath + "/applications/teamwork/resource/resourceNew.jsp?CM=ADD&name=" + encodeURI(name);
+        const row = el.closest("tr[taskid]");
+        const name = row.find("[name=resourceId_txt]").val();
+        const url = contextPath + "/applications/teamwork/resource/resourceNew.jsp?CM=ADD&name=" + encodeURI(name);
 
         openBlackPopup(url, 700, 320, function (response) {
             //fillare lo smart combo
@@ -1031,12 +959,10 @@
     }
 
     $(document).on("change", "#load-file", function () {
-        var uploadedFile = $("#load-file").prop("files")[0];
+        const uploadedFile = $("#load-file").prop("files")[0];
         upload(uploadedFile);
     });
-
 </script>
-
 
 </body>
 </html>

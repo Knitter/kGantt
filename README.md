@@ -25,3 +25,14 @@ These are some key features from jQueryGantt that are still true in kGantt:
 * critical path
 * milestones, progress etc.
 * zoom
+
+## Resources
+
+Currently used favicon (just a placeholder) was generated using the following:
+
+- Font Title: Lato
+- Font Author: Copyright (c) 2010-2011 by tyPoland Lukasz Dziedzic (team@latofonts.com) with Reserved Font Name "Lato". Licensed under the SIL Open Font License, Version 1.1.
+- Font Source: https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHvxk6XweuBCY.ttf
+- Font License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL))
+
+Generator: https://favicon.io/favicon-generator/

@@ -34,7 +34,6 @@ function GanttMaster() {
     this.workSpace;  // the original element used for containing everything
     this.element; // editor and gantt box without buttons
 
-
     this.resources; //list of resources
     this.roles;  //list of roles
 
@@ -56,7 +55,6 @@ function GanttMaster() {
     this.baselines = {}; // contains {taskId:{taskId,start,end,status,progress}}
     this.showBaselines = false; //allows to draw baselines
     this.baselineMillis; //millis of the current baseline loaded
-
 
     this.permissions = {
         canWriteOnParent: true,
@@ -88,7 +86,6 @@ function GanttMaster() {
 
     var self = this;
 }
-
 
 GanttMaster.prototype.init = function (workSpace) {
     var place = $("<div>").prop("id", "TWGanttArea").css({
@@ -133,10 +130,11 @@ GanttMaster.prototype.init = function (workSpace) {
     workSpace.bind("deleteFocused.gantt", function (e) {
         //delete task or link?
         var focusedSVGElement = self.gantt.element.find(".focused.focused.linkGroup");
-        if (focusedSVGElement.size() > 0)
+        if (focusedSVGElement.size() > 0) {
             self.removeLink(focusedSVGElement.data("from"), focusedSVGElement.data("to"));
-        else
+        } else {
             self.deleteCurrentTask();
+        }
     }).bind("addAboveCurrentTask.gantt", function () {
         self.addAboveCurrentTask();
     }).bind("addBelowCurrentTask.gantt", function () {
@@ -157,13 +155,10 @@ GanttMaster.prototype.init = function (workSpace) {
         self.fullScreen();
     }).bind("print.gantt", function () {
         self.print();
-
-
     }).bind("zoomPlus.gantt", function () {
         self.gantt.zoomGantt(true);
     }).bind("zoomMinus.gantt", function () {
         self.gantt.zoomGantt(false);
-
     }).bind("openFullEditor.gantt", function () {
         self.editor.openFullEditor(self.currentTask, false);
     }).bind("openAssignmentEditor.gantt", function () {
@@ -172,7 +167,6 @@ GanttMaster.prototype.init = function (workSpace) {
         self.addIssue();
     }).bind("openExternalEditor.gantt", function () {
         self.openExternalEditor();
-
     }).bind("undo.gantt", function () {
         self.undo();
     }).bind("redo.gantt", function () {
@@ -181,10 +175,8 @@ GanttMaster.prototype.init = function (workSpace) {
         self.resize();
     });
 
-
     //bind editor scroll
     self.splitter.firstBox.scroll(function () {
-
         //notify scroll to editor and gantt
         self.gantt.element.stopTime("test").oneTime(10, "test", function () {
             var oldFirstRow = self.firstScreenLine;
@@ -195,7 +187,6 @@ GanttMaster.prototype.init = function (workSpace) {
             }
         });
     });
-
 
     //keyboard management bindings
     $("body").bind("keydown.body", function (e) {
@@ -209,51 +200,38 @@ GanttMaster.prototype.init = function (workSpace) {
         //store focused field
         var focusedField = $(":focus");
         var focusedSVGElement = self.gantt.element.find(".focused.focused");// orrible hack for chrome that seems to keep in memory a cached object
-
         var isFocusedSVGElement = focusedSVGElement.length > 0;
 
         if ((inWorkSpace || isFocusedSVGElement) && isCtrl && e.keyCode == 37) { // CTRL+LEFT on the grid
             self.outdentCurrentTask();
             focusedField.focus();
-
         } else if (inWorkSpace && isCtrl && e.keyCode == 38) { // CTRL+UP   on the grid
             self.moveUpCurrentTask();
             focusedField.focus();
-
         } else if (inWorkSpace && isCtrl && e.keyCode == 39) { //CTRL+RIGHT  on the grid
             self.indentCurrentTask();
             focusedField.focus();
-
         } else if (inWorkSpace && isCtrl && e.keyCode == 40) { //CTRL+DOWN   on the grid
             self.moveDownCurrentTask();
             focusedField.focus();
-
         } else if (isCtrl && e.keyCode == 89) { //CTRL+Y
             self.redo();
-
         } else if (isCtrl && e.keyCode == 90) { //CTRL+Y
             self.undo();
-
-
         } else if ((isCtrl && inWorkSpace) && (e.keyCode == 8 || e.keyCode == 46)) { //CTRL+DEL CTRL+BACKSPACE  on grid
             self.deleteCurrentTask();
-
         } else if (focusedSVGElement.is(".taskBox") && (e.keyCode == 8 || e.keyCode == 46)) { //DEL BACKSPACE  svg task
             self.deleteCurrentTask();
-
         } else if (focusedSVGElement.is(".linkGroup") && (e.keyCode == 8 || e.keyCode == 46)) { //DEL BACKSPACE  svg link
             self.removeLink(focusedSVGElement.data("from"), focusedSVGElement.data("to"));
-
         } else {
             eventManaged = false;
         }
-
 
         if (eventManaged) {
             e.preventDefault();
             e.stopPropagation();
         }
-
     });
 
     //ask for comment input
@@ -262,7 +240,6 @@ GanttMaster.prototype.init = function (workSpace) {
     //ask for comment management
     this.element.on("saveRequired.gantt", this.manageSaveRequired);
 
-
     //resize
     $(window).resize(function () {
         place.css({width: "100%", height: $(window).height() - place.position().top});
@@ -270,8 +247,6 @@ GanttMaster.prototype.init = function (workSpace) {
     }).oneTime(2, "resize", function () {
         $(window).trigger("resize")
     });
-
-
 };
 
 GanttMaster.messages = {
@@ -300,15 +275,13 @@ GanttMaster.messages = {
     "CANNOT_CREATE_SAME_LINK": "CANNOT_CREATE_SAME_LINK"
 };
 
-
 GanttMaster.prototype.createTask = function (id, name, code, level, start, duration) {
     var factory = new TaskFactory();
     return factory.build(id, name, code, level, start, duration);
 };
 
-
 GanttMaster.prototype.getOrCreateResource = function (id, name) {
-    var res = this.getResource(id);
+    let res = this.getResource(id);
     if (!res && id && name) {
         res = this.createResource(id, name);
     }
@@ -316,31 +289,31 @@ GanttMaster.prototype.getOrCreateResource = function (id, name) {
 };
 
 GanttMaster.prototype.createResource = function (id, name) {
-    var res = new Resource(id, name);
+    let res = new Resource(id, name);
     this.resources.push(res);
     return res;
 };
 
-
 //update depends strings
 GanttMaster.prototype.updateDependsStrings = function () {
+    let i;
     //remove all deps
-    for (var i = 0; i < this.tasks.length; i++) {
+    for (i = 0; i < this.tasks.length; i++) {
         this.tasks[i].depends = "";
     }
 
-    for (var i = 0; i < this.links.length; i++) {
-        var link = this.links[i];
-        var dep = link.to.depends;
+    for (i = 0; i < this.links.length; i++) {
+        const link = this.links[i];
+        const dep = link.to.depends;
         link.to.depends = link.to.depends + (link.to.depends == "" ? "" : ",") + (link.from.getRow() + 1) + (link.lag ? ":" + link.lag : "");
     }
-
 };
 
 GanttMaster.prototype.removeLink = function (fromTask, toTask) {
     //console.debug("removeLink");
-    if (!this.permissions.canWrite || (!fromTask.canWrite && !toTask.canWrite))
+    if (!this.permissions.canWrite || (!fromTask.canWrite && !toTask.canWrite)) {
         return;
+    }
 
     this.beginTransaction();
     var found = false;
@@ -1643,27 +1616,27 @@ GanttMaster.prototype.computeCriticalPath = function () {
 //------------------------------------------- MANAGE CHANGE LOG INPUT ---------------------------------------------------
 GanttMaster.prototype.manageSaveRequired = function (ev, showSave) {
     //console.debug("manageSaveRequired", showSave);
-
-    var self = this;
+    const self = this;
 
     function checkChanges() {
-        var changes = false;
+        let changes = false;
         //there is somethin in the redo stack?
-        if (self.__undoStack.length > 0) {
-            var oldProject = JSON.parse(self.__undoStack[0]);
+        if (self.__undoStack !== undefined && self.__undoStack.length > 0) {
+            const oldProject = JSON.parse(self.__undoStack[0]);
             //si looppano i "nuovi" task
-            for (var i = 0; !changes && i < self.tasks.length; i++) {
-                var newTask = self.tasks[i];
+            for (let i = 0; !changes && i < self.tasks.length; i++) {
+                const newTask = self.tasks[i];
                 //se è un task che c'erà già
                 if (!("" + newTask.id).startsWith("tmp_")) {
                     //si recupera il vecchio task
-                    var oldTask;
-                    for (var j = 0; j < oldProject.tasks.length; j++) {
+                    let oldTask;
+                    for (let j = 0; j < oldProject.tasks.length; j++) {
                         if (oldProject.tasks[j].id == newTask.id) {
                             oldTask = oldProject.tasks[j];
                             break;
                         }
                     }
+
                     // chack only status or dateChanges
                     if (oldTask && (oldTask.status != newTask.status || oldTask.start != newTask.start || oldTask.end != newTask.end)) {
                         changes = true;
@@ -1672,18 +1645,17 @@ GanttMaster.prototype.manageSaveRequired = function (ev, showSave) {
                 }
             }
         }
+
         $("#LOG_CHANGES_CONTAINER").css("display", changes ? "inline-block" : "none");
     }
 
-
     if (showSave) {
         $("body").stopTime("gantt.manageSaveRequired").oneTime(200, "gantt.manageSaveRequired", checkChanges);
-    } else {
-        $("#LOG_CHANGES_CONTAINER").hide();
+        return;
     }
 
+    $("#LOG_CHANGES_CONTAINER").hide();
 }
-
 
 /**
  * workStartHour,endStartHour : millis from 00:00

@@ -52,14 +52,11 @@ function Task(id, name, code, level, start, end, duration, collapsed) {
     this.level = level;
     this.status = "STATUS_UNDEFINED";
     this.depends = "";
-
     this.start = start;
     this.duration = duration;
     this.end = end;
-
     this.startIsMilestone = false;
     this.endIsMilestone = false;
-
     this.collapsed = collapsed;
 
     //permissions
@@ -73,25 +70,26 @@ function Task(id, name, code, level, start, end, duration, collapsed) {
     this.ganttElement; //gantt html element
     this.master;
 
-
     this.assigs = [];
 }
 
 Task.prototype.clone = function () {
-    var ret = {};
-    for (var key in this) {
-        if (typeof (this[key]) != "function")
-            if (typeof (this[key]) != "object" || Array.isArray(this[key]))
+    const ret = {};
+    for (const key in this) {
+        if (typeof (this[key]) != "function") {
+            if (typeof (this[key]) != "object" || Array.isArray(this[key])) {
                 ret[key] = this[key];
+            }
+        }
     }
     return ret;
 };
 
 Task.prototype.getAssigsString = function () {
-    var ret = "";
-    for (var i = 0; i < this.assigs.length; i++) {
-        var ass = this.assigs[i];
-        var res = this.master.getResource(ass.resourceId);
+    let ret = "";
+    for (let i = 0; i < this.assigs.length; i++) {
+        const ass = this.assigs[i];
+        const res = this.master.getResource(ass.resourceId);
         if (res) {
             ret = ret + (ret == "" ? "" : ", ") + res.name;
         }
@@ -100,11 +98,10 @@ Task.prototype.getAssigsString = function () {
 };
 
 Task.prototype.createAssignment = function (id, resourceId, roleId, effort) {
-    var assig = new Assignment(id, resourceId, roleId, effort);
-    this.assigs.push(assig);
-    return assig;
+    const assign = new Assignment(id, resourceId, roleId, effort);
+    this.assigs.push(assign);
+    return assign;
 };
-
 
 //<%---------- SET PERIOD ---------------------- --%>
 Task.prototype.setPeriod = function (start, end) {
@@ -119,19 +116,17 @@ Task.prototype.setPeriod = function (start, end) {
         end = end.getTime();
     }
 
-    var originalPeriod = {
+    const originalPeriod = {
         start: this.start,
         end: this.end,
         duration: this.duration
     };
 
-
     //compute legal start/end //todo mossa qui R&S 30/3/2016 perchè altrimenti il calcolo della durata, che è stato modificato sommando giorni, sbaglia
     start = computeStart(start);
     end = computeEnd(end);
 
-    var newDuration = recomputeDuration(start, end);
-
+    const newDuration = recomputeDuration(start, end);
     //if are equals do nothing and return true
     if (start == originalPeriod.start && end == originalPeriod.end && newDuration == originalPeriod.duration) {
         return true;
@@ -141,16 +136,13 @@ Task.prototype.setPeriod = function (start, end) {
         return this.moveTo(start, false, true);
     }
 
-    var wantedStartMillis = start;
-
-    var children = this.getChildren();
-
+    const wantedStartMillis = start;
+    const children = this.getChildren();
     if (this.master.shrinkParent && children.length > 0) {
-        var chPeriod = this.getChildrenBoudaries();
+        const chPeriod = this.getChildrenBoudaries();
         start = chPeriod.start;
         end = chPeriod.end;
     }
-
 
     //cannot start after end
     if (start > end) {
