@@ -1,14 +1,3 @@
-@font-face {
-    font-family: 'TeamworkRegular';
-    src: url('res/icons.eot?5qjga5');
-    src: url('res/icons.eot?#iefix5qjga5') format('embedded-opentype'),
-    url('res/icons.woff?5qjga5') format('woff'),
-    url('res/icons.ttf?5qjga5') format('truetype'),
-    url('res/icons.svg?5qjga5#icons') format('svg');
-    font-weight: normal !important;
-    font-style: normal;
-}
-
 * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -23,7 +12,6 @@ body styles
 */
 BODY, TBODY {
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-    /*font-family: 'Open Sans', sans-serif;*/
     font-size: 14px;
     margin: 0;
     color: #1e2f41;
@@ -33,16 +21,15 @@ BODY, TBODY {
 a {
     text-decoration: none;
     font-weight: bold;
-    /*color: #16ABDD;*/
     color: #2b9af3;
     text-rendering: optimizelegibility;
     -webkit-font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased;
+    /*-moz-font-smoothing: antialiased;*/
 
 }
 
 a:hover, a.aHover {
-    color: #0C85AD;
+    /*color: #0C85AD;*/
     color: #2575be;
     text-decoration: underline;
 }
@@ -104,19 +91,6 @@ h4 {
 teamwork icon
 -------------------------------------------------------
 */
-
-.teamworkIcon {
-    font-family: 'TeamworkRegular' !important;
-    color: #34495e;
-    font-weight: normal;
-    font-size: 120%;
-    font-style: normal !important;
-    text-rendering: optimizelegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased;
-
-}
-
 .teamworkIcon:hover {
     opacity: .8
 }
@@ -140,11 +114,11 @@ teamwork icon
 .cvcColorSquare {
     display: inline-block;
     text-align: left;
-    border: #fff 0px solid;
-    box-shadow: 0px 0px 5px #999;
+    border: #fff 0 solid;
+    box-shadow: 0 0 5px #999;
     -moz-box-shadow: 2px 2px 2px #999;
-    -webkit-box-shadow: 0px 0px 5px #999;
-    -o-box-shadow: 0px 0px 5px #999;
+    -webkit-box-shadow: 0 0 5px #999;
+    -o-box-shadow: 0 0 5px #999;
     text-indent: 10px;
     border-radius: 5px;
     cursor: pointer;
@@ -156,9 +130,9 @@ teamwork icon
 
 .unselectable {
     -webkit-user-select: none;
-    -khtml-user-select: none;
+    /*-khtml-user-select: none;*/
     -moz-user-select: none;
-    -o-user-select: none;
+    /*-o-user-select: none;*/
     user-select: none;
 }
 
@@ -273,7 +247,6 @@ TH, .tableHeader {
     color: #a2a2a2
 }
 
-
 .ganttTaskEditor h2 {
     text-transform: capitalize
 
@@ -290,13 +263,11 @@ table .resRow td, table .assigEditRow td {
     padding: 5px 0
 }
 
-
 /*
 -------------------------------------------------------
 Gantt Online
 -------------------------------------------------------
 */
-
 
 .servicesEnroll h2 {
     margin-bottom: 20px
@@ -311,12 +282,10 @@ Gantt Online
     margin: -20px auto 30px;
 }
 
-
 .twAds {
     height: 38px;
     background-color: #5ACADF;
     width: 100%;
-    /*background-image: url("../../img/twAdBg.png");*/
     text-align: center;
     color: #fff;
     z-index: 1000;
@@ -422,7 +391,6 @@ Gantt Online
     height: 0;
 }
 
-
 .embedCode {
     font-family: Consolas, monospace !important;
     font-size: 100%;
@@ -462,8 +430,6 @@ Gantt Online
 }
 
 /* close commented backslash hack */
-
-
 /*
 -------------------------------------------------------
 Buttons
@@ -490,7 +456,7 @@ Buttons
     background-color: #34495e;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
-    -o-border-radius: 5px;
+    /*-o-border-radius: 5px;*/
     border-radius: 5px;
     border: 1px solid rgba(0, 0, 0, 0.2);
     padding: 5px 12px 8px;
@@ -541,7 +507,7 @@ Buttons
     color: #68979B;
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
-    -o-border-radius: 0;
+    /*-o-border-radius: 0;*/
     border-radius: 0;
     padding: 0;
     margin: 0;
@@ -549,7 +515,7 @@ Buttons
 }
 
 .button.opt {
-    background-color: #009E94;
+    /*background-color: #009E94;*/
     background-color: #2792E6;
 }
 
@@ -609,7 +575,7 @@ select {
     border: 1px solid #91B4B7;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
-    -o-border-radius: 3px;
+    /*-o-border-radius: 3px;*/
     border-radius: 3px;
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
@@ -623,7 +589,7 @@ select {
     height: 25px;
     margin-left: -20px;
     position: absolute;
-    background: url("../../applications/gantt/distrib/res/alert.gif") no-repeat;
+    /*background: url("../../applications/gantt/distrib/res/alert.gif") no-repeat;*/
 }
 
 span#FLD_LOGIN_NAMEerror, span#FLD_PWDerror {
@@ -638,7 +604,7 @@ input {
     border: 1px solid #91B4B7;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
-    -o-border-radius: 3px;
+    /*-o-border-radius: 3px;*/
     border-radius: 3px;
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
@@ -654,7 +620,6 @@ input {
     position: absolute;
     margin: 0 auto
 }
-
 
 .confirmBox .confirmNo {
     color: #e06060;
@@ -690,9 +655,7 @@ iframe#bwinPopup {
     text-transform: capitalize
 }
 
-
 /******** SHARE BOX *********/
-
 .shareBar {
     position: absolute;
     right: 100px;
@@ -774,7 +737,6 @@ iframe#bwinPopup {
     display: none;
 }
 
-
 /*-------------------------------------------------   MODAL POPUP (ex blackPopup) ------------------------------------------------------*/
 .modalPopup {
     position: fixed;
@@ -848,4 +810,3 @@ iframe#bwinPopup {
     position: absolute;
     left: -5000px;
 }
-

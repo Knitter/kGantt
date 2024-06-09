@@ -1,5 +1,4 @@
 body {
-    /*overflow: hidden;*/
 }
 
 .TWGanttWorkSpace.ganttFullScreen {
@@ -57,7 +56,6 @@ body {
     border-right: none;
 }
 
-
 .gdfCellInput {
     border: 0 none;
     font-size: 12px;
@@ -76,14 +74,12 @@ body {
     padding: 0;
     width: 100%;
     overflow: hidden;
-
     background-color: #ffcccc;
 }
 
 .gdfHResizing {
     cursor: w-resize;
 }
-
 
 /* -------------------------------------- SPLITTER -----------------------------------*/
 .splitterContainer {
@@ -101,7 +97,6 @@ body {
     overflow-y: auto;
 }
 
-
 .splitElement {
     outline-style: none;
     position: absolute;
@@ -112,7 +107,6 @@ body {
 .vSplitBar {
     position: relative;
     width: 5px;
-    /*background-color: rgba(170, 170, 170, .2);*/
     cursor: ew-resize;
     text-align: center;
     color: white;
@@ -124,29 +118,23 @@ body {
 .unselectable .vSplitBar, .vSplitBar:hover {
     background-color: rgba(170, 170, 170, .5);
     box-shadow: 0 0 5px rgba(0, 0, 0, .5);
-
 }
 
 .vSplitBar .toLeft, .vSplitBar .toRight, .vSplitBar .toCenter {
-    font-family: icons, TeamworkRegular;
+    /*font-family: icons, TeamworkRegular;*/
     cursor: pointer;
     position: absolute;
     top: 0;
     margin-top: 0;
-    /*background-color: rgba(170, 170, 170, .2);*/
-    /*background-color: rgba(0, 126, 221, 0.3);*/
     background-color: rgba(47, 170, 201, 0.3);
     z-index: 2;
     font-size: 10px;
     width: 15px;
-    /*box-shadow: 0 0 1px rgba(0, 0, 0, .5);*/
 }
 
-.unselectable .vSplitBar .toLeft, .unselectable .vSplitBar .toCenter, .unselectable .vSplitBar .toRight, .vSplitBar:hover .toLeft, .vSplitBar:hover .toRight, .vSplitBar:hover .toCenter {
-    /*background-color: rgba(170, 170, 170, 1);*/
-    /*background-color: rgba(0, 126, 221, 1);*/
+.unselectable .vSplitBar .toLeft, .unselectable .vSplitBar .toCenter, .unselectable .vSplitBar .toRight,
+.vSplitBar:hover .toLeft, .vSplitBar:hover .toRight, .vSplitBar:hover .toCenter {
     background-color: rgba(47, 170, 201, 1);
-
     box-shadow: 0 0 1px rgba(0, 0, 0, .4);
 }
 
@@ -172,7 +160,6 @@ body {
 }
 
 /* -------------------------------------- GANTT -----------------------------------*/
-
 .ganttTable {
     table-layout: fixed;
     background-color: #ffffff;
@@ -192,7 +179,7 @@ body {
     border-left: 1px solid #b0b0b0;
     padding: 0;
     margin: 0;
-    /*border-right: 1px solid #bbb;*/
+
     border-bottom: 1px solid #bbb;
     background: #EEEEEE;
     white-space: pre-line;
@@ -209,7 +196,6 @@ body {
     padding: 0;
     margin: 0;
     border-left: 1px solid #b0b0b0;
-    /*border-right: 1px solid #bbb;*/
     border-bottom: 2px solid #bbb;
     background: #EEEEEE;
 }
@@ -237,7 +223,6 @@ body {
 .ganttButtonBar {
     position: relative;
     z-index: 2;
-    /*background-color: #fff;*/
     border-bottom: 1px solid #959595;
     padding: 5px 0 5px 10px;
 }
@@ -269,11 +254,9 @@ body {
     height: 45px;
 }
 
-
 .button span.teamworkIcon {
     text-indent: -10px;
 }
-
 
 .button.textual span.teamworkIcon {
     font-size: 140%
@@ -285,7 +268,6 @@ body {
     margin-bottom: 0;
     vertical-align: middle;
 }
-
 
 .ganttButtonSeparator {
     border-left: 1px solid #dadada;
@@ -306,7 +288,6 @@ body {
     z-index: 10;
 }
 
-
 .ganttTable td.end {
     border-right: 2px dotted #ddd;
 }
@@ -319,9 +300,7 @@ body {
     background-color: rgba(255, 245, 230, 0.51);
 }
 
-
 /* -------------------------------------- TASK -----------------------------------*/
-
 .taskBoxDiv {
     position: absolute;
     height: 25px;
@@ -520,12 +499,11 @@ select.taskStatus {
 
 .unselectable {
     -webkit-user-select: none;
-    -khtml-user-select: none;
+    /*-khtml-user-select: none;*/
     -moz-user-select: none;
-    -o-user-select: none;
+    /*-o-user-select: none;*/
     user-select: none;
 }
-
 
 .exp-controller {
     display: inline-block;
@@ -537,12 +515,13 @@ select.taskStatus {
 }
 
 .isParent .exp-controller {
-    background-image: url(res/toggle_collapse.png);
+    cursor: pointer;
+    background-image: url(res/svg-icons/minus-x16.svg);
 }
 
 .isParent.collapsed .exp-controller {
     cursor: pointer;
-    background-image: url(res/toggle-expand.png);
+    background-image: url(res/svg-icons/plus-x26.svg);
 }
 
 .ui-resizable-helper {
@@ -595,7 +574,6 @@ select.taskStatus {
     fill: transparent;
     stroke-width: 1;
     stroke: #fff;
-
 }
 
 .isGanttList .ganttLinesSVG:nth-child(odd) {
@@ -612,7 +590,7 @@ select.taskStatus {
 .ganttTodaySVG {
     stroke-width: 2px;
     stroke: #e06671;
-    stroke-linecap: "round";
+    stroke-linecap: round;
     stroke-dasharray: 2, 2;
 }
 
@@ -666,7 +644,7 @@ select.taskStatus {
 .linkLineSVG {
     stroke-width: 5px;
     stroke: rgba(47, 151, 198, 0.7);
-    stroke-linecap: "round";
+    stroke-linecap: round;
     opacity: .5;
 }
 
@@ -709,7 +687,6 @@ select.taskStatus {
     stroke: rgba(255, 0, 0, 0.7);
 }
 
-
 /*--------------------------------------------------- RESOURCE ADD  --------------------------------------------------*/
 .ganttAddResource {
     position: absolute;
@@ -746,7 +723,6 @@ select.taskStatus {
     z-index: 200;
 }
 
-
 /*---------------------------------#LOG_CHANGES_CONTAINER --------------------------------------------*/
 #LOG_CHANGES_CONTAINER {
     display: none;
@@ -755,7 +731,6 @@ select.taskStatus {
     margin-left: -35px
 }
 
-
 .userProfile {
     font-size: 16px;
     vertical-align: middle;
@@ -763,10 +738,10 @@ select.taskStatus {
     margin: 0 5px 0 0;
     padding: 5px;
     float: right;
-    position: relative;
+    /*position: relative;*/
     z-index: 50;
     line-height: 40px;
-    vertical-align: middle;
+    /*vertical-align: middle;*/
     position: absolute;
     right: 0;
 }
@@ -791,9 +766,7 @@ select.taskStatus {
 }
 
 /*--------------------------------------------------- Media queries  --------------------------------------------------*/
-
 /* Large screens */
-
 @media only screen and (max-width: 1260px) {
 
     .ganttButtonBar .button span.teamworkIcon {
@@ -803,11 +776,9 @@ select.taskStatus {
     .userLine {
         display: none;
     }
-
 }
 
 @media only screen and (min-width: 1261px) and (max-width: 1320px) {
-
     .ganttButtonBar .button span.teamworkIcon {
         font-size: 130%;
     }
@@ -822,11 +793,9 @@ select.taskStatus {
     .userLine {
         display: none;
     }
-
 }
 
 @media only screen and (max-width: 1160px) {
-
     .userProfile {
         float: none;
         position: absolute;
@@ -841,11 +810,9 @@ select.taskStatus {
     .userProfile .ganttButtonSeparator, .userProfile .avatar {
         border-color: rgb(127, 154, 170);
     }
-
 }
 
 /* Ipad */
-
 @media only screen and  (min-width: 768px) and (max-width: 1024px) {
     .ganttButtonSeparator {
         margin-left: 2px;
@@ -859,7 +826,6 @@ select.taskStatus {
 }
 
 /* Mobile TODO */
-
 @media only screen and (max-width: 767px) {
     .button {
         font-size: 50%;

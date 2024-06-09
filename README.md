@@ -28,6 +28,8 @@ These are some key features from jQueryGantt that are still true in kGantt:
 
 ## Resources
 
+### Favicon
+
 Currently used favicon (just a placeholder) was generated using the following:
 
 - Font Title: Lato
@@ -36,3 +38,7 @@ Currently used favicon (just a placeholder) was generated using the following:
 - Font License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL))
 
 Generator: https://favicon.io/favicon-generator/
+
+### Icons
+
+Icons from https://tabler.io/icons
