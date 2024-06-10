@@ -1,6 +1,26 @@
 kGantt
 ======
 
+## Why Another Gantt Library
+
+I've looked into several libraries, both proprietary and free software, and they either are too expensive for the 
+I need to use a Gantt chart or have licenses that make it difficult to use in proprietary projects, or don't offer the 
+features I need.
+
+One of the best Gantt components I've found is Oracle JET Gantt, unfortunately it requires me to build a full OJET 
+based SPA application and integration those into non SPA, or simple HTML/CSS + JS projects (no UI or APP frameworks) 
+takes more time (and effort) than it should.
+
+The second-best Gantt component is jQueryGantt, that I've forked to build this project, with the following 
+requirements/goals:
+
+- Simple to use and integrate into HTML, CSS and JavaScript projects that don't use frameworks (currently, kGantt 
+still depends on jQuery);
+- Free software that offers a good set of base features;
+- Prefer vanilla JavaScript, with as little dependencies as possible;
+
+## Original Project
+
 Based on jQueryGantt, a jQuery based Gantt editor written by Roberto Bicchierai and Silvia Chelazzi, part of the
 [Twproject](https://twproject.com), with code available at https://github.com/robicch/jQueryGantt.
 
