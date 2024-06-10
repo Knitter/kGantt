@@ -20,7 +20,7 @@
  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-function GanttMaster() {
+function Gantt() {
     this.tasks = [];
     this.deletedTaskIds = [];
     this.links = [];
@@ -86,7 +86,7 @@ function GanttMaster() {
     const self = this;
 }
 
-GanttMaster.prototype.init = function (ganttId) {
+Gantt.prototype.init = function (ganttId) {
     const workSpace = jQuery(ganttId.startsWith("#") ? ganttId : `#${ganttId}`);
     const place = $("<div>").prop("id", "TWGanttArea").css({
         padding: 0,
@@ -243,7 +243,7 @@ GanttMaster.prototype.init = function (ganttId) {
     });
 };
 
-GanttMaster.messages = {
+Gantt.messages = {
     "CANNOT_WRITE": "CANNOT_WRITE",
     "CHANGE_OUT_OF_SCOPE": "NO_RIGHTS_FOR_UPDATE_PARENTS_OUT_OF_EDITOR_SCOPE",
     "START_IS_MILESTONE": "START_IS_MILESTONE",
@@ -269,12 +269,12 @@ GanttMaster.messages = {
     "CANNOT_CREATE_SAME_LINK": "CANNOT_CREATE_SAME_LINK"
 };
 
-GanttMaster.prototype.createTask = function (id, name, code, level, start, duration) {
+Gantt.prototype.createTask = function (id, name, code, level, start, duration) {
     const factory = new TaskFactory();
     return factory.build(id, name, code, level, start, duration);
 };
 
-GanttMaster.prototype.getOrCreateResource = function (id, name) {
+Gantt.prototype.getOrCreateResource = function (id, name) {
     let res = this.getResource(id);
     if (!res && id && name) {
         res = this.createResource(id, name);
@@ -283,14 +283,14 @@ GanttMaster.prototype.getOrCreateResource = function (id, name) {
     return res
 };
 
-GanttMaster.prototype.createResource = function (id, name) {
+Gantt.prototype.createResource = function (id, name) {
     const res = new Resource(id, name);
     this.resources.push(res);
     return res;
 };
 
 //update depends strings
-GanttMaster.prototype.updateDependsStrings = function () {
+Gantt.prototype.updateDependsStrings = function () {
     let i;
     //remove all deps
     for (i = 0; i < this.tasks.length; i++) {
@@ -304,7 +304,7 @@ GanttMaster.prototype.updateDependsStrings = function () {
     }
 };
 
-GanttMaster.prototype.removeLink = function (fromTask, toTask) {
+Gantt.prototype.removeLink = function (fromTask, toTask) {
     if (!this.permissions.canWrite || (!fromTask.canWrite && !toTask.canWrite)) {
         return;
     }
@@ -327,7 +327,7 @@ GanttMaster.prototype.removeLink = function (fromTask, toTask) {
     this.endTransaction();
 };
 
-GanttMaster.prototype.__removeAllLinks = function (task, openTrans) {
+Gantt.prototype.__removeAllLinks = function (task, openTrans) {
     if (openTrans) {
         this.beginTransaction();
     }
@@ -350,7 +350,7 @@ GanttMaster.prototype.__removeAllLinks = function (task, openTrans) {
 };
 
 //------------------------------------  ADD TASK --------------------------------------------
-GanttMaster.prototype.addTask = function (task, row) {
+Gantt.prototype.addTask = function (task, row) {
     task.master = this; // in order to access controller from task
 
     //replace if already exists
@@ -407,7 +407,7 @@ GanttMaster.prototype.addTask = function (task, row) {
  * a project contais tasks, resources, roles, and info about permisions
  * @param project
  */
-GanttMaster.prototype.loadProject = function (project) {
+Gantt.prototype.loadProject = function (project) {
     this.beginTransaction();
     this.serverClientTimeOffset = typeof project.serverTimeOffset != "undefined" ? (parseInt(project.serverTimeOffset) + new Date().getTimezoneOffset() * 60000) : 0;
     this.resources = project.resources;
@@ -464,7 +464,7 @@ GanttMaster.prototype.loadProject = function (project) {
     });
 };
 
-GanttMaster.prototype.loadTasks = function (tasks, selectedRow) {
+Gantt.prototype.loadTasks = function (tasks, selectedRow) {
     let task;
     let i;
     const factory = new TaskFactory();
@@ -503,7 +503,7 @@ GanttMaster.prototype.loadTasks = function (tasks, selectedRow) {
         }
 
         if (!task.setPeriod(task.start, task.end)) {
-            alert(GanttMaster.messages.GANNT_ERROR_LOADING_DATA_TASK_REMOVED + "\n" + task.name);
+            alert(Gantt.messages.GANNT_ERROR_LOADING_DATA_TASK_REMOVED + "\n" + task.name);
             //remove task from in-memory collection
             this.tasks.splice(task.getRow(), 1);
         } else {
@@ -521,7 +521,7 @@ GanttMaster.prototype.loadTasks = function (tasks, selectedRow) {
     }
 };
 
-GanttMaster.prototype.getTask = function (taskId) {
+Gantt.prototype.getTask = function (taskId) {
     var ret;
     for (var i = 0; i < this.tasks.length; i++) {
         var tsk = this.tasks[i];
@@ -533,7 +533,7 @@ GanttMaster.prototype.getTask = function (taskId) {
     return ret;
 };
 
-GanttMaster.prototype.getResource = function (resId) {
+Gantt.prototype.getResource = function (resId) {
     var ret;
     for (var i = 0; i < this.resources.length; i++) {
         var res = this.resources[i];
@@ -545,20 +545,20 @@ GanttMaster.prototype.getResource = function (resId) {
     return ret;
 };
 
-GanttMaster.prototype.changeTaskDeps = function (task) {
+Gantt.prototype.changeTaskDeps = function (task) {
     return task.moveTo(task.start, false, true);
 };
 
-GanttMaster.prototype.changeTaskDates = function (task, start, end) {
+Gantt.prototype.changeTaskDates = function (task, start, end) {
     //console.debug("changeTaskDates",task, start, end)
     return task.setPeriod(start, end);
 };
 
-GanttMaster.prototype.moveTask = function (task, newStart) {
+Gantt.prototype.moveTask = function (task, newStart) {
     return task.moveTo(newStart, true, true);
 };
 
-GanttMaster.prototype.taskIsChanged = function () {
+Gantt.prototype.taskIsChanged = function () {
     const master = this;
     //refresh is executed only once every 50ms
     this.element.stopTime("gnnttaskIsChanged");
@@ -569,7 +569,7 @@ GanttMaster.prototype.taskIsChanged = function () {
     });
 };
 
-GanttMaster.prototype.checkButtonPermissions = function () {
+Gantt.prototype.checkButtonPermissions = function () {
     const ganttButtons = $(".ganttButtonBar");
     //hide buttons basing on permissions
     if (!this.permissions.canWrite) {
@@ -601,12 +601,12 @@ GanttMaster.prototype.checkButtonPermissions = function () {
     }
 };
 
-GanttMaster.prototype.redraw = function () {
+Gantt.prototype.redraw = function () {
     this.editor.redraw();
     this.gantt.redraw();
 };
 
-GanttMaster.prototype.reset = function () {
+Gantt.prototype.reset = function () {
     this.tasks = [];
     this.links = [];
     this.deletedTaskIds = [];
@@ -623,16 +623,16 @@ GanttMaster.prototype.reset = function () {
     this.gantt.reset();
 };
 
-GanttMaster.prototype.showTaskEditor = function (taskId) {
+Gantt.prototype.showTaskEditor = function (taskId) {
     const task = this.getTask(taskId);
     task.rowElement.find(".edit").click();
 };
 
-GanttMaster.prototype.saveProject = function () {
+Gantt.prototype.saveProject = function () {
     return this.saveGantt(false);
 };
 
-GanttMaster.prototype.saveGantt = function (forTransaction) {
+Gantt.prototype.saveGantt = function (forTransaction) {
     const saved = [];
     for (let i = 0; i < this.tasks.length; i++) {
         const task = this.tasks[i];
@@ -673,7 +673,7 @@ GanttMaster.prototype.saveGantt = function (forTransaction) {
     return ret;
 };
 
-GanttMaster.prototype.markUnChangedTasksAndAssignments = function (newProject) {
+Gantt.prototype.markUnChangedTasksAndAssignments = function (newProject) {
     //si controlla che ci sia qualcosa di cambiato, ovvero che ci sia l'undo stack
     if (this.__undoStack.length > 0) {
         const oldProject = JSON.parse(this.__undoStack[0]);
@@ -743,7 +743,7 @@ GanttMaster.prototype.markUnChangedTasksAndAssignments = function (newProject) {
     }
 };
 
-GanttMaster.prototype.loadCollapsedTasks = function () {
+Gantt.prototype.loadCollapsedTasks = function () {
     let collTasks = [];
     if (localStorage) {
         if (localStorage.getObject("TWPGanttCollTasks")) {
@@ -753,7 +753,7 @@ GanttMaster.prototype.loadCollapsedTasks = function () {
     }
 };
 
-GanttMaster.prototype.storeCollapsedTasks = function () {
+Gantt.prototype.storeCollapsedTasks = function () {
     if (localStorage) {
         let collTasks;
         if (!localStorage.getObject("TWPGanttCollTasks")) {
@@ -779,7 +779,7 @@ GanttMaster.prototype.storeCollapsedTasks = function () {
     }
 };
 
-GanttMaster.prototype.updateLinks = function (task) {
+Gantt.prototype.updateLinks = function (task) {
     // defines isLoop function
     function isLoop(task, target, visited) {
         let i;
@@ -862,16 +862,16 @@ GanttMaster.prototype.updateLinks = function (task) {
             const sup = this.tasks[parseInt(supStr) - 1];
             if (sup) {
                 if (parents && parents.indexOf(sup) >= 0) {
-                    this.setErrorOnTransaction("\"" + task.name + "\"\n" + GanttMaster.messages.CANNOT_DEPENDS_ON_ANCESTORS + "\n\"" + sup.name + "\"");
+                    this.setErrorOnTransaction("\"" + task.name + "\"\n" + Gantt.messages.CANNOT_DEPENDS_ON_ANCESTORS + "\n\"" + sup.name + "\"");
                     todoOk = false;
                 } else if (descendants && descendants.indexOf(sup) >= 0) {
-                    this.setErrorOnTransaction("\"" + task.name + "\"\n" + GanttMaster.messages.CANNOT_DEPENDS_ON_DESCENDANTS + "\n\"" + sup.name + "\"");
+                    this.setErrorOnTransaction("\"" + task.name + "\"\n" + Gantt.messages.CANNOT_DEPENDS_ON_DESCENDANTS + "\n\"" + sup.name + "\"");
                     todoOk = false;
                 } else if (isLoop(sup, task, visited)) {
                     todoOk = false;
-                    this.setErrorOnTransaction(GanttMaster.messages.CIRCULAR_REFERENCE + "\n\"" + task.id + " - " + task.name + "\" -> \"" + sup.id + " - " + sup.name + "\"");
+                    this.setErrorOnTransaction(Gantt.messages.CIRCULAR_REFERENCE + "\n\"" + task.id + " - " + task.name + "\" -> \"" + sup.id + " - " + sup.name + "\"");
                 } else if (depsEqualCheck.indexOf(sup) >= 0) {
-                    this.setErrorOnTransaction(GanttMaster.messages.CANNOT_CREATE_SAME_LINK + "\n\"" + sup.name + "\" -> \"" + task.name + "\"");
+                    this.setErrorOnTransaction(Gantt.messages.CANNOT_CREATE_SAME_LINK + "\n\"" + sup.name + "\" -> \"" + task.name + "\"");
                     todoOk = false;
                 } else {
                     this.links.push(new Link(sup, task, lag));
@@ -888,7 +888,7 @@ GanttMaster.prototype.updateLinks = function (task) {
     return todoOk;
 };
 
-GanttMaster.prototype.moveUpCurrentTask = function () {
+Gantt.prototype.moveUpCurrentTask = function () {
     const self = this;
     if (self.currentTask) {
         if (!(self.permissions.canWrite || self.currentTask.canWrite) || !self.permissions.canMoveUpDown) {
@@ -901,7 +901,7 @@ GanttMaster.prototype.moveUpCurrentTask = function () {
     }
 };
 
-GanttMaster.prototype.moveDownCurrentTask = function () {
+Gantt.prototype.moveDownCurrentTask = function () {
     const self = this;
     if (self.currentTask) {
         if (!(self.permissions.canWrite || self.currentTask.canWrite) || !self.permissions.canMoveUpDown) {
@@ -914,7 +914,7 @@ GanttMaster.prototype.moveDownCurrentTask = function () {
     }
 };
 
-GanttMaster.prototype.outdentCurrentTask = function () {
+Gantt.prototype.outdentCurrentTask = function () {
     const self = this;
     if (self.currentTask) {
         const par = self.currentTask.getParent();
@@ -934,7 +934,7 @@ GanttMaster.prototype.outdentCurrentTask = function () {
     }
 };
 
-GanttMaster.prototype.indentCurrentTask = function () {
+Gantt.prototype.indentCurrentTask = function () {
     const self = this;
     if (self.currentTask) {
         //can indent if you have canRight on current and canAdd on the row above
@@ -949,7 +949,7 @@ GanttMaster.prototype.indentCurrentTask = function () {
     }
 };
 
-GanttMaster.prototype.addBelowCurrentTask = function () {
+Gantt.prototype.addBelowCurrentTask = function () {
     const self = this;
     //console.debug("addBelowCurrentTask",self.currentTask)
     const factory = new TaskFactory();
@@ -982,7 +982,7 @@ GanttMaster.prototype.addBelowCurrentTask = function () {
     }
 };
 
-GanttMaster.prototype.addAboveCurrentTask = function () {
+Gantt.prototype.addAboveCurrentTask = function () {
     const self = this;
 
     //check permissions
@@ -1013,7 +1013,7 @@ GanttMaster.prototype.addAboveCurrentTask = function () {
     }
 };
 
-GanttMaster.prototype.deleteCurrentTask = function (taskId) {
+Gantt.prototype.deleteCurrentTask = function (taskId) {
     //console.debug("deleteCurrentTask",this.currentTask , this.isMultiRoot)
     const self = this;
     let task;
@@ -1057,7 +1057,7 @@ GanttMaster.prototype.deleteCurrentTask = function (taskId) {
     }
 };
 
-GanttMaster.prototype.collapseAll = function () {
+Gantt.prototype.collapseAll = function () {
     if (this.currentTask) {
         this.currentTask.collapsed = true;
         const desc = this.currentTask.getDescendant();
@@ -1074,12 +1074,12 @@ GanttMaster.prototype.collapseAll = function () {
     }
 };
 
-GanttMaster.prototype.fullScreen = function () {
+Gantt.prototype.fullScreen = function () {
     this.workSpace.toggleClass("ganttFullScreen").resize();
     $("#fullscrbtn .teamworkIcon").html(this.workSpace.is(".ganttFullScreen") ? "€" : "@");
 };
 
-GanttMaster.prototype.expandAll = function () {
+Gantt.prototype.expandAll = function () {
     //console.debug("expandAll");
     if (this.currentTask) {
         this.currentTask.collapsed = false;
@@ -1095,7 +1095,7 @@ GanttMaster.prototype.expandAll = function () {
     }
 };
 
-GanttMaster.prototype.collapse = function (task, all) {
+Gantt.prototype.collapse = function (task, all) {
     task.collapsed = true;
     task.rowElement.addClass("collapsed");
 
@@ -1109,7 +1109,7 @@ GanttMaster.prototype.collapse = function (task, all) {
     this.storeCollapsedTasks();
 };
 
-GanttMaster.prototype.expand = function (task, all) {
+Gantt.prototype.expand = function (task, all) {
     task.collapsed = false;
     task.rowElement.removeClass("collapsed");
 
@@ -1128,7 +1128,7 @@ GanttMaster.prototype.expand = function (task, all) {
     this.storeCollapsedTasks();
 };
 
-GanttMaster.prototype.getCollapsedDescendant = function () {
+Gantt.prototype.getCollapsedDescendant = function () {
     const allTasks = this.tasks;
     let collapsedDescendant = [];
     for (let i = 0; i < allTasks.length; i++) {
@@ -1144,10 +1144,10 @@ GanttMaster.prototype.getCollapsedDescendant = function () {
     return collapsedDescendant;
 }
 
-GanttMaster.prototype.addIssue = function () {
+Gantt.prototype.addIssue = function () {
     const self = this;
     if (self.currentTask && self.currentTask.isNew()) {
-        alert(GanttMaster.messages.PLEASE_SAVE_PROJECT);
+        alert(Gantt.messages.PLEASE_SAVE_PROJECT);
         return;
     }
 
@@ -1158,20 +1158,20 @@ GanttMaster.prototype.addIssue = function () {
     openIssueEditorInBlack('0', "AD", "ISSUE_TASK=" + self.currentTask.id);
 };
 
-GanttMaster.prototype.openExternalEditor = function () {
+Gantt.prototype.openExternalEditor = function () {
     const self = this;
     if (!self.currentTask) {
         return;
     }
 
     if (self.currentTask.isNew()) {
-        alert(GanttMaster.messages.PLEASE_SAVE_PROJECT);
+        alert(Gantt.messages.PLEASE_SAVE_PROJECT);
         return;
     }
 };
 
 //<%----------------------------- TRANSACTION MANAGEMENT ---------------------------------%>
-GanttMaster.prototype.beginTransaction = function () {
+Gantt.prototype.beginTransaction = function () {
     if (!this.__currentTransaction) {
         this.__currentTransaction = {
             snapshot: JSON.stringify(this.saveGantt(true)),
@@ -1184,7 +1184,7 @@ GanttMaster.prototype.beginTransaction = function () {
 };
 
 //this function notify an error to a transaction -> transaction will rollback
-GanttMaster.prototype.setErrorOnTransaction = function (errorMessage, task) {
+Gantt.prototype.setErrorOnTransaction = function (errorMessage, task) {
     if (this.__currentTransaction) {
         this.__currentTransaction.errors.push({msg: errorMessage, task: task});
     } else {
@@ -1192,7 +1192,7 @@ GanttMaster.prototype.setErrorOnTransaction = function (errorMessage, task) {
     }
 };
 
-GanttMaster.prototype.isTransactionInError = function () {
+Gantt.prototype.isTransactionInError = function () {
     if (!this.__currentTransaction) {
         console.error("Transaction never started.");
         return true;
@@ -1201,7 +1201,7 @@ GanttMaster.prototype.isTransactionInError = function () {
     }
 };
 
-GanttMaster.prototype.endTransaction = function () {
+Gantt.prototype.endTransaction = function () {
     if (!this.__currentTransaction) {
         console.error("Transaction never started.");
         return true;
@@ -1247,14 +1247,14 @@ GanttMaster.prototype.endTransaction = function () {
 };
 
 // inhibit undo-redo
-GanttMaster.prototype.checkpoint = function () {
+Gantt.prototype.checkpoint = function () {
     this.__undoStack = [];
     this.__redoStack = [];
     this.saveRequired();
 };
 
 //----------------------------- UNDO/REDO MANAGEMENT ---------------------------------%>
-GanttMaster.prototype.undo = function () {
+Gantt.prototype.undo = function () {
     if (this.__undoStack.length > 0) {
         const his = this.__undoStack.pop();
         this.__redoStack.push(JSON.stringify(this.saveGantt()));
@@ -1268,7 +1268,7 @@ GanttMaster.prototype.undo = function () {
     }
 };
 
-GanttMaster.prototype.redo = function () {
+Gantt.prototype.redo = function () {
     if (this.__redoStack.length > 0) {
         const his = this.__redoStack.pop();
         this.__undoStack.push(JSON.stringify(this.saveGantt()));
@@ -1281,7 +1281,7 @@ GanttMaster.prototype.redo = function () {
     }
 };
 
-GanttMaster.prototype.saveRequired = function () {
+Gantt.prototype.saveRequired = function () {
     //show/hide save button
     if (this.__undoStack.length > 0) {
         $("#saveGanttButton").removeClass("disabled");
@@ -1294,12 +1294,12 @@ GanttMaster.prototype.saveRequired = function () {
     }
 };
 
-GanttMaster.prototype.print = function () {
+Gantt.prototype.print = function () {
     this.gantt.redrawTasks(true);
     print();
 };
 
-GanttMaster.prototype.resize = function () {
+Gantt.prototype.resize = function () {
     const self = this;
     this.element.stopTime("resizeRedraw").oneTime(50, "resizeRedraw", function () {
         self.splitter.resize();
@@ -1309,7 +1309,7 @@ GanttMaster.prototype.resize = function () {
     });
 };
 
-GanttMaster.prototype.scrolled = function (oldFirstRow) {
+Gantt.prototype.scrolled = function (oldFirstRow) {
     const self = this;
     const newFirstRow = self.firstScreenLine;
 
@@ -1382,7 +1382,7 @@ GanttMaster.prototype.scrolled = function (oldFirstRow) {
  * WARNNG: It ignore milestones!!!!
  * @return {*}
  */
-GanttMaster.prototype.computeCriticalPath = function () {
+Gantt.prototype.computeCriticalPath = function () {
     let t;
     let i;
     if (!this.tasks) {
@@ -1520,7 +1520,7 @@ GanttMaster.prototype.computeCriticalPath = function () {
 };
 
 //------------------------------------------- MANAGE CHANGE LOG INPUT ---------------------------------------------------
-GanttMaster.prototype.manageSaveRequired = function (ev, showSave) {
+Gantt.prototype.manageSaveRequired = function (ev, showSave) {
     const self = this;
 
     function checkChanges() {
@@ -1567,7 +1567,7 @@ GanttMaster.prototype.manageSaveRequired = function (ev, showSave) {
  * dateFormat dd/MM/yyyy HH:mm
  * working period resolution in millis or days
  */
-GanttMaster.prototype.setHoursOn = function (startWorkingHour, endWorkingHour, dateFormat, resolution) {
+Gantt.prototype.setHoursOn = function (startWorkingHour, endWorkingHour, dateFormat, resolution) {
     Date.defaultFormat = dateFormat;
     Date.startWorkingHour = startWorkingHour;
     Date.endWorkingHour = endWorkingHour;

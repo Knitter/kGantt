@@ -57,7 +57,7 @@
         const canWrite = true; //this is the default for test purposes
 
         // here starts gantt initialization
-        ge = new GanttMaster();
+        ge = new Gantt();
         ge.set100OnClose = true;
         ge.shrinkParent = true;
 
@@ -710,7 +710,7 @@
     });
 
     function loadI18n() {
-        GanttMaster.messages = {
+        Gantt.messages = {
             "CANNOT_WRITE": "No permission to change the following task:",
             "CHANGE_OUT_OF_SCOPE": "Project update not possible as you lack rights for updating a parent project.",
             "START_IS_MILESTONE": "Start date is a milestone.",

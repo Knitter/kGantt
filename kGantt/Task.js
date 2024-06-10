@@ -180,13 +180,13 @@ Task.prototype.setPeriod = function (start, end) {
 
     //cannot write exit
     if (!this.canWrite) {
-        this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + GanttMaster.messages["CANNOT_WRITE"], this);
+        this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + Gantt.messages["CANNOT_WRITE"], this);
         return false;
     }
 
     //external dependencies: exit with error
     if (this.hasExternalDep) {
-        this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + GanttMaster.messages["TASK_HAS_EXTERNAL_DEPS"], this);
+        this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + Gantt.messages["TASK_HAS_EXTERNAL_DEPS"], this);
         return false;
     }
 
@@ -227,7 +227,7 @@ Task.prototype.setPeriod = function (start, end) {
 
         //check global boundaries
         if (this.start < this.master.minEditableDate || this.end > this.master.maxEditableDate) {
-            this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + GanttMaster.messages["CHANGE_OUT_OF_SCOPE"], this);
+            this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + Gantt.messages["CHANGE_OUT_OF_SCOPE"], this);
             todoOk = false;
         }
 
@@ -276,7 +276,7 @@ Task.prototype.moveTo = function (start, ignoreMilestones, propagateToInferiors)
     if (this.start != start || this.start != wantedStartMillis) {
         //in case of end is milestone it never changes!
         //if (!ignoreMilestones && this.endIsMilestone && end != this.end) {
-        //  this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + GanttMaster.messages["END_IS_MILESTONE"], this);
+        //  this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + Gantt.messages["END_IS_MILESTONE"], this);
         //  return false;
         //}
         this.start = start;
@@ -285,7 +285,7 @@ Task.prototype.moveTo = function (start, ignoreMilestones, propagateToInferiors)
 
         //check global boundaries
         if (this.start < this.master.minEditableDate || this.end > this.master.maxEditableDate) {
-            this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + GanttMaster.messages["CHANGE_OUT_OF_SCOPE"], this);
+            this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + Gantt.messages["CHANGE_OUT_OF_SCOPE"], this);
             return false;
         }
 
@@ -327,15 +327,15 @@ Task.prototype.checkMilestonesConstraints = function (newStart, newEnd, ignoreMi
 //if start is milestone cannot be move
     if (!ignoreMilestones && (this.startIsMilestone && newStart != this.start)) {
         //notify error
-        this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + GanttMaster.messages["START_IS_MILESTONE"], this);
+        this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + Gantt.messages["START_IS_MILESTONE"], this);
         return false;
     } else if (!ignoreMilestones && (this.endIsMilestone && newEnd != this.end)) {
         //notify error
-        this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + GanttMaster.messages["END_IS_MILESTONE"], this);
+        this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + Gantt.messages["END_IS_MILESTONE"], this);
         return false;
     } else if (this.hasExternalDep) {
         //notify error
-        this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + GanttMaster.messages["TASK_HAS_EXTERNAL_DEPS"], this);
+        this.master.setErrorOnTransaction("\"" + this.name + "\"\n" + Gantt.messages["TASK_HAS_EXTERNAL_DEPS"], this);
         return false;
     }
     return true;
@@ -351,7 +351,7 @@ Task.prototype.propagateToInferiors = function (end) {
         for (var i = 0; i < infs.length; i++) {
             var link = infs[i];
             if (!link.to.canWrite) {
-                this.master.setErrorOnTransaction(GanttMaster.messages["CANNOT_WRITE"] + "\n\"" + link.to.name + "\"", link.to);
+                this.master.setErrorOnTransaction(Gantt.messages["CANNOT_WRITE"] + "\n\"" + link.to.name + "\"", link.to);
                 break;
             }
             todoOk = link.to.moveTo(end, false, true); //this is not the right date but moveTo checks start
@@ -413,16 +413,16 @@ function updateTree(task) {
 
     if (p.start != newStart) {
         if (p.startIsMilestone) {
-            task.master.setErrorOnTransaction("\"" + p.name + "\"\n" + GanttMaster.messages["START_IS_MILESTONE"], task);
+            task.master.setErrorOnTransaction("\"" + p.name + "\"\n" + Gantt.messages["START_IS_MILESTONE"], task);
             return false;
         } else if (p.depends) {
-            task.master.setErrorOnTransaction("\"" + p.name + "\"\n" + GanttMaster.messages["TASK_HAS_CONSTRAINTS"], task);
+            task.master.setErrorOnTransaction("\"" + p.name + "\"\n" + Gantt.messages["TASK_HAS_CONSTRAINTS"], task);
             return false;
         }
     }
     if (p.end != newEnd) {
         if (p.endIsMilestone) {
-            task.master.setErrorOnTransaction("\"" + p.name + "\"\n" + GanttMaster.messages["END_IS_MILESTONE"], task);
+            task.master.setErrorOnTransaction("\"" + p.name + "\"\n" + Gantt.messages["END_IS_MILESTONE"], task);
             return false;
         }
     }
@@ -433,13 +433,13 @@ function updateTree(task) {
 
         //can write?
         if (!p.canWrite) {
-            task.master.setErrorOnTransaction(GanttMaster.messages["CANNOT_WRITE"] + "\n" + p.name, task);
+            task.master.setErrorOnTransaction(Gantt.messages["CANNOT_WRITE"] + "\n" + p.name, task);
             return false;
         }
 
         //has external deps ?
         if (p.hasExternalDep) {
-            task.master.setErrorOnTransaction(GanttMaster.messages["TASK_HAS_EXTERNAL_DEPS"] + "\n\"" + p.name + "\"", task);
+            task.master.setErrorOnTransaction(Gantt.messages["TASK_HAS_EXTERNAL_DEPS"] + "\n\"" + p.name + "\"", task);
             return false;
         }
 
@@ -487,7 +487,7 @@ Task.prototype.changeStatus = function (newStatus, forceStatusCheck) {
 
             // cannot close task if open issues
             if (task.master.permissions.cannotCloseTaskIfIssueOpen && task.openIssues > 0) {
-                task.master.setErrorOnTransaction(GanttMaster.messages["CANNOT_CLOSE_TASK_IF_OPEN_ISSUE"] + " \"" + task.name + "\"");
+                task.master.setErrorOnTransaction(Gantt.messages["CANNOT_CLOSE_TASK_IF_OPEN_ISSUE"] + " \"" + task.name + "\"");
                 return false;
             }
 
@@ -499,7 +499,7 @@ Task.prototype.changeStatus = function (newStatus, forceStatusCheck) {
                 for (var i = 0; i < sups.length; i++) {
                     if (sups[i].from.status != "STATUS_DONE" && cone.indexOf(sups[i].from) < 0) { // è un errore se un predecessore è non chiuso ed è fuori dal cono
                         if (manuallyChanged || propagateFromParent)  //genere un errore bloccante se è cambiato a mano o se il cambiamento arriva dal parent ed ho una dipendenza fuori dal cono (altrimenti avrei un attivo figlio di un chiuso
-                            task.master.setErrorOnTransaction(GanttMaster.messages["GANTT_ERROR_DEPENDS_ON_OPEN_TASK"] + "\n\"" + sups[i].from.name + "\" -> \"" + task.name + "\"");
+                            task.master.setErrorOnTransaction(Gantt.messages["GANTT_ERROR_DEPENDS_ON_OPEN_TASK"] + "\n\"" + sups[i].from.name + "\" -> \"" + task.name + "\"");
                         todoOk = false;
                         break;
                     }
@@ -537,7 +537,7 @@ Task.prototype.changeStatus = function (newStatus, forceStatusCheck) {
                 for (var i = 0; i < sups.length; i++) {
                     if (sups[i].from.status != "STATUS_DONE") {
                         if (manuallyChanged || propagateFromChildren)
-                            task.master.setErrorOnTransaction(GanttMaster.messages["GANTT_ERROR_DEPENDS_ON_OPEN_TASK"] + "\n\"" + sups[i].from.name + "\" -> \"" + task.name + "\"");
+                            task.master.setErrorOnTransaction(Gantt.messages["GANTT_ERROR_DEPENDS_ON_OPEN_TASK"] + "\n\"" + sups[i].from.name + "\" -> \"" + task.name + "\"");
                         todoOk = false;
                         break;
                     }
@@ -1032,7 +1032,7 @@ Task.prototype.moveUp = function () {
         //recompute depends string
         this.master.updateDependsStrings();
     } else {
-        this.master.setErrorOnTransaction(GanttMaster.messages["TASK_MOVE_INCONSISTENT_LEVEL"], this);
+        this.master.setErrorOnTransaction(Gantt.messages["TASK_MOVE_INCONSISTENT_LEVEL"], this);
         ret = false;
     }
     return ret;

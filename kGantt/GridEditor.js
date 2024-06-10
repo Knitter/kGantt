@@ -287,7 +287,7 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
             const inp = $(this);
             if (inp.isValueChanged()) {
                 if (!Date.isValid(inp.val())) {
-                    alert(GanttMaster.messages["INVALID_DATE_FORMAT"]);
+                    alert(Gantt.messages["INVALID_DATE_FORMAT"]);
                     inp.val(inp.getOldValue());
                 } else {
                     const row = inp.closest("tr");
