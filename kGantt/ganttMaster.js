@@ -87,8 +87,9 @@ function GanttMaster() {
     var self = this;
 }
 
-GanttMaster.prototype.init = function (workSpace) {
-    var place = $("<div>").prop("id", "TWGanttArea").css({
+GanttMaster.prototype.init = function (ganttId) {
+    const workSpace = jQuery(ganttId.startsWith("#") ? ganttId : `#${ganttId}`);
+    const place = $("<div>").prop("id", "TWGanttArea").css({
         padding: 0,
         "overflow-y": "auto",
         "overflow-x": "hidden",

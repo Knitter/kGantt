@@ -1074,13 +1074,6 @@ iframe#bwinPopup {
     font-size: 140%
 }
 
-#saveGanttButton {
-    margin-left: 20px;
-    padding: 5px 12px;
-    margin-bottom: 0;
-    vertical-align: middle;
-}
-
 .ganttButtonSeparator {
     border-left: 1px solid #dadada;
     margin: 0 10px;
