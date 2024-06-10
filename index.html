@@ -285,40 +285,6 @@
         return ret;
     }
 
-    function upload(uploadedFile) {
-        const fileread = new FileReader();
-        fileread.onload = function (e) {
-            var content = e.target.result;
-            var intern = JSON.parse(content); // Array of Objects.
-            //console.log(intern); // You can index every object
-
-            ge.loadProject(intern);
-            ge.checkpoint(); //empty the undo stack
-        };
-
-        fileread.readAsText(uploadedFile);
-    }
-
-    // Function to download data to a file
-    function download(data, filename, type) {
-        const file = new Blob([data], {type: type});
-        if (window.navigator.msSaveOrOpenBlob) {// IE10+
-            window.navigator.msSaveOrOpenBlob(file, filename);
-        } else { // Others
-            const a = document.createElement("a");
-            const url = URL.createObjectURL(file);
-
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(function () {
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            }, 0);
-        }
-    }
-
     function newProject() {
         clearGantt();
     }
@@ -752,11 +718,6 @@
 
         });
     }
-
-    $(document).on("change", "#load-file", function () {
-        const uploadedFile = $("#load-file").prop("files")[0];
-        upload(uploadedFile);
-    });
 </script>
 
 </body>

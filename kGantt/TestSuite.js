@@ -1,24 +1,26 @@
-var testCount = 0;
+let testCount = 0;
+
+
+//---------------------------------------------------------------------  TEST UNIT DEFINITIONS ------------------------------------------------------------------------------------
+const ganttTestUnits = [];
 
 function enqueueNewTest() {
-    var test = ganttTestUnits.shift();
-    if (!test)
+    const test = ganttTestUnits.shift();
+    if (!test) {
         return;
-
+    }
 
     //ci si registra per gli eventi di refresh
-
     ge.element.one("gantt.redrawCompleted", function () {
         //si registra l'evento di validazione al refresh
         ge.element.one("gantt.redrawCompleted", function () {
-            if (test.assertOk())
+            if (test.assertOk()) {
                 console.debug("------------------------- OK!");
-            else
+            } else {
                 console.error("Test " + testCount + " \"" + test.name + "\"------------------------- FAILED!");
-
+            }
             //si passa al test successivo
             setTimeout(enqueueNewTest, 200);
-            //enqueueNewTest();
         });
 
         //si chiama la funzione di preparazione del test
@@ -27,14 +29,13 @@ function enqueueNewTest() {
         testCount++;
     });
 
-
     //se nel test ci sono i task si resetta il gantt
     if (test.tasks) {
         //si resetta tutto
         ge.reset();
 
         //si prepara un progetto
-        var prj = {
+        const prj = {
             tasks: test.tasks,
             resources: [],
             roles: [],
@@ -54,16 +55,12 @@ function enqueueNewTest() {
 
         //si carica il progetto
         ge.loadProject(prj);
-
-
         // se i task non ci sono si parte dallo stato lasciato dall'ultimo test
     } else {
         //si lancia l'evento facendo finta di avere caricato tutti itask
         ge.element.trigger("gantt.redrawCompleted");
     }
-
 }
-
 
 $(function () {
     console.debug("Gantt test unit activated");
@@ -71,11 +68,6 @@ $(function () {
         setTimeout(enqueueNewTest, 1000);
     });
 });
-
-
-//---------------------------------------------------------------------  TEST UNIT DEFINITIONS ------------------------------------------------------------------------------------
-
-var ganttTestUnits = [];
 
 // 0 --------------------------------------------------------------------------------------------------------------
 ganttTestUnits.push({
@@ -170,8 +162,7 @@ ganttTestUnits.push({
         });
     },
     assertOk: function () {
-        var ret = ge.tasks[1].status == "STATUS_DONE" && ge.tasks[2].status == "STATUS_DONE";
-        return ret;
+        return ge.tasks[1].status == "STATUS_DONE" && ge.tasks[2].status == "STATUS_DONE";
     }
 });
 
@@ -185,7 +176,7 @@ ganttTestUnits.push({
         });
     },
     assertOk: function () {
-        return ret = ge.tasks[1].status == "STATUS_DONE" && ge.tasks[2].status == "STATUS_DONE";
+        return ge.tasks[1].status == "STATUS_DONE" && ge.tasks[2].status == "STATUS_DONE";
     }
 });
 
@@ -199,7 +190,7 @@ ganttTestUnits.push({
         });
     },
     assertOk: function () {
-        return ret = ge.tasks[1].status == "STATUS_FAILED";
+        return ge.tasks[1].status == "STATUS_FAILED";
     }
 });
 
@@ -213,7 +204,7 @@ ganttTestUnits.push({
         });
     },
     assertOk: function () {
-        return ret = ge.tasks[2].status == "STATUS_FAILED";
+        return ge.tasks[2].status == "STATUS_FAILED";
     }
 });
 
@@ -431,7 +422,6 @@ ganttTestUnits.push({
     }
 });
 
-
 // 6 ------------------------------------------------------------------------------------
 ganttTestUnits.push({
     name: "Crea dipendenza da task chiuso: mette B in stato aperto",
@@ -526,7 +516,6 @@ ganttTestUnits.push({
         return ge.tasks[2].status == "STATUS_ACTIVE";
     }
 });
-
 
 // 7 ------------------------------------------------------------------------------------
 ganttTestUnits.push({
@@ -648,7 +637,6 @@ ganttTestUnits.push({
     }
 });
 
-
 // 8 ------------------------------------------------------------------------------------
 ganttTestUnits.push({
     name: "Tree tutto undefined, apro la root: A open B,C waiting",
@@ -768,7 +756,6 @@ ganttTestUnits.push({
         return ge.tasks[0].status == "STATUS_ACTIVE" && ge.tasks[1].status == "STATUS_ACTIVE" && ge.tasks[2].status == "STATUS_WAITING" && ge.tasks[3].status == "STATUS_WAITING";
     }
 });
-
 
 // 9 ------------------------------------------------------------------------------------
 ganttTestUnits.push({
@@ -934,7 +921,6 @@ ganttTestUnits.push({
     }
 });
 
-
 // 10 --------------------------------------------------------------------------------------------------------------
 ganttTestUnits.push({
     name: "Caso Cabassi passo 2: c dipende da a, c1 dipende da b1: chiudendo a c e c1 divengono attivi",
@@ -950,7 +936,6 @@ ganttTestUnits.push({
     }
 });
 
-
 // 11 --------------------------------------------------------------------------------------------------------------
 ganttTestUnits.push({
     name: "Caso Cabassi passo 3: Fallisco predecessore, dip e figli falliscono. a->failed: c,c1->failed",
@@ -965,7 +950,6 @@ ganttTestUnits.push({
         return ge.tasks[1].status == "STATUS_FAILED" && ge.tasks[4].status == "STATUS_FAILED" && ge.tasks[5].status == "STATUS_FAILED";
     }
 });
-
 
 // 12 ------------------------------------------------------------------------------------
 ganttTestUnits.push({
@@ -1085,7 +1069,6 @@ ganttTestUnits.push({
         return ge.tasks[0].duration == 3 && ge.tasks[1].duration == 2 && getDistanceInUnits(new Date(ge.tasks[2].start), new Date(ge.tasks[3].start)) == 2;
     }
 });
-
 
 // 13 ------------------------------------------------------------------------------------
 ganttTestUnits.push({
@@ -1410,7 +1393,6 @@ ganttTestUnits.push({
     }
 });
 
-
 // 15 ------------------------------------------------------------------------------------
 ganttTestUnits.push({
     name: "Pan/Move nel caso di un figlio F con dipendenze ad uno 'zio' Z. Sposto avanti R -> P mantiene la durata",
@@ -1535,7 +1517,6 @@ ganttTestUnits.push({
     }
 });
 
-
 // 16 ------------------------------------------------------------------------------------
 ganttTestUnits.push({
     name: "Cambia la durata da 1 a 3 giorni: devono essere davvero tre giorni",
@@ -1583,7 +1564,7 @@ ganttTestUnits.push({
     },
     assertOk: function () {
         //la distanza deve essere 3
-        var distanceInUnits = getDurationInUnits(new Date(ge.tasks[0].start), new Date(ge.tasks[0].end));
+        const distanceInUnits = getDurationInUnits(new Date(ge.tasks[0].start), new Date(ge.tasks[0].end));
         //console.debug("Test 16: distanceInUnits="+distanceInUnits);
         return distanceInUnits == 3;
     }
@@ -1637,15 +1618,13 @@ ganttTestUnits.push({
         ge.tasks[0].rowElement.find("[name=duration]").val(3).blur();
     },
     assertOk: function () {
-        var self = this;
-        var newStart = new Date(ge.tasks[0].start);
-        var newEnd = new Date(ge.tasks[0].end);
-
-        var startCh = getDistanceInUnits(newStart, this.oldStart);
+        const self = this;
+        const newStart = new Date(ge.tasks[0].start);
+        const newEnd = new Date(ge.tasks[0].end);
+        const startCh = getDistanceInUnits(newStart, this.oldStart);
         return startCh == 2 && newEnd.equals(this.oldEnd);
     }
 });
-
 
 // 18 --------------------------------------------------------------------------------------------------------------
 ganttTestUnits.push({
@@ -1738,11 +1717,9 @@ ganttTestUnits.push({
         ge.tasks[1].rowElement.find(".taskStatus").click().oneTime(100, "setStat", function () {
             $(this).next().find("[status=STATUS_SUSPENDED]").click()
         });
-
     },
     assertOk: function () {
-        var ret = ge.tasks[1].status == "STATUS_SUSPENDED" && ge.tasks[2].status == "STATUS_SUSPENDED";
-        return ret;
+        return ge.tasks[1].status == "STATUS_SUSPENDED" && ge.tasks[2].status == "STATUS_SUSPENDED";
     }
 });
 
@@ -1879,8 +1856,7 @@ ganttTestUnits.push({
 
     },
     assertOk: function () {
-        var ret = ge.tasks[0].rowElement.find("[name=duration]").val() == 2 && ge.tasks[1].rowElement.find("[name=start]").val() == "12/12/2017";
-        return ret;
+        return ge.tasks[0].rowElement.find("[name=duration]").val() == 2 && ge.tasks[1].rowElement.find("[name=start]").val() == "12/12/2017";
     }
 });
 
@@ -1892,8 +1868,7 @@ ganttTestUnits.push({
 
     },
     assertOk: function () {
-        var ret = ge.tasks[0].rowElement.find("[name=duration]").val() == 2 && ge.tasks[1].rowElement.find("[name=start]").val() == ge.tasks[0].rowElement.find("[name=start]").val();
-        return ret;
+        return ge.tasks[0].rowElement.find("[name=duration]").val() == 2 && ge.tasks[1].rowElement.find("[name=start]").val() == ge.tasks[0].rowElement.find("[name=start]").val();
     }
 });
 
@@ -2024,8 +1999,7 @@ ganttTestUnits.push({
         ge.tasks[1].rowElement.find("[name=duration]").val(1).trigger("blur");
     },
     assertOk: function () {
-        var ret = ge.tasks[0].rowElement.find("[name=duration]").val() == 3;
-        return ret;
+        return ge.tasks[0].rowElement.find("[name=duration]").val() == 3;
     }
 });
 
@@ -2156,11 +2130,9 @@ ganttTestUnits.push({
         ge.tasks[1].rowElement.find("[name=duration]").val(1).trigger("blur");
     },
     assertOk: function () {
-        var ret = ge.tasks[0].rowElement.find("[name=duration]").val() == 4;
-        return ret;
+        return ge.tasks[0].rowElement.find("[name=duration]").val() == 4;
     }
 });
-
 
 //ganttTestUnits=ganttTestUnits.slice(0,2)
 //ganttTestUnits=[ganttTestUnits[21]]
