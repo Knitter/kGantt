@@ -8,7 +8,6 @@ Date functions
 
 These functions are used to parse, format, and manipulate Date objects.
 See documentation and examples at http://www.JavascriptToolbox.com/lib/date/
-
 */
 Date.$VERSION = 1.02;
 
@@ -17,15 +16,15 @@ Date.LZ = function (x) {
     return (x < 0 || x > 9 ? "" : "0") + x
 };
 // Full month names. Change this for local month names
-Date.monthNames = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+Date.monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 // Month abbreviations. Change this for local month names
-Date.monthAbbreviations = new Array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+Date.monthAbbreviations = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 // Full day names. Change this for local month names
-Date.dayNames = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+Date.dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 // Day abbreviations. Change this for local month names
-Date.dayAbbreviations = new Array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
+Date.dayAbbreviations = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 // Used for parsing ambiguous dates like 1/2/2000 - default to preferring 'American' format meaning Jan 2.
-// Set to false to prefer 'European' format meaning Feb 1
+// Set false to prefer 'European' format meaning Feb 1
 Date.preferAmericanFormat = true;
 
 // Set to 0=SUn for American 1=Mon for european
@@ -37,7 +36,7 @@ Date.defaultFormat = "dd/MM/yyyy";
 // If the getFullYear() method is not defined, create it
 if (!Date.prototype.getFullYear) {
     Date.prototype.getFullYear = function () {
-        var yy = this.getYear();
+        const yy = this.getYear();
         return (yy < 1900 ? yy + 1900 : yy);
     };
 }
@@ -49,14 +48,14 @@ if (!Date.prototype.getFullYear) {
 Date.parseString = function (val, format, lenient) {
     // If no format is specified, try a few common formats
     if (typeof (format) == "undefined" || format == null || format == "") {
-        var generalFormats = new Array(Date.defaultFormat, 'y-M-d', 'MMM d, y', 'MMM d,y', 'y-MMM-d', 'd-MMM-y', 'MMM d', 'MMM-d', 'd-MMM');
-        var monthFirst = new Array('M/d/y', 'M-d-y', 'M.d.y', 'M/d', 'M-d');
-        var dateFirst = new Array('d/M/y', 'd-M-y', 'd.M.y', 'd/M', 'd-M');
-        var checkList = new Array(generalFormats, Date.preferAmericanFormat ? monthFirst : dateFirst, Date.preferAmericanFormat ? dateFirst : monthFirst);
-        for (var i = 0; i < checkList.length; i++) {
-            var l = checkList[i];
-            for (var j = 0; j < l.length; j++) {
-                var d = Date.parseString(val, l[j]);
+        const generalFormats = new Array(Date.defaultFormat, 'y-M-d', 'MMM d, y', 'MMM d,y', 'y-MMM-d', 'd-MMM-y', 'MMM d', 'MMM-d', 'd-MMM');
+        const monthFirst = new Array('M/d/y', 'M-d-y', 'M.d.y', 'M/d', 'M-d');
+        const dateFirst = new Array('d/M/y', 'd-M-y', 'd.M.y', 'd/M', 'd-M');
+        const checkList = new Array(generalFormats, Date.preferAmericanFormat ? monthFirst : dateFirst, Date.preferAmericanFormat ? dateFirst : monthFirst);
+        for (let i = 0; i < checkList.length; i++) {
+            const l = checkList[i];
+            for (let j = 0; j < l.length; j++) {
+                const d = Date.parseString(val, l[j]);
                 if (d != null) {
                     return d;
                 }
@@ -64,7 +63,6 @@ Date.parseString = function (val, format, lenient) {
         }
         return null;
     }
-    ;
 
     this.isInteger = function (val) {
         for (var i = 0; i < val.length; i++) {
@@ -74,12 +72,14 @@ Date.parseString = function (val, format, lenient) {
         }
         return true;
     };
+
     this.getInt = function (str, i, minlength, maxlength) {
-        for (var x = maxlength; x >= minlength; x--) {
-            var token = str.substring(i, i + x);
+        for (let x = maxlength; x >= minlength; x--) {
+            const token = str.substring(i, i + x);
             if (token.length < minlength) {
                 return null;
             }
+
             if (this.isInteger(token)) {
                 return token;
             }
@@ -87,69 +87,55 @@ Date.parseString = function (val, format, lenient) {
         return null;
     };
 
-
     this.decodeShortcut = function (str) {
         str = str ? str : ""; // just in case
-        var dateUpper = str.trim().toUpperCase();
-        var ret = new Date();
+        const dateUpper = str.trim().toUpperCase();
+        let ret = new Date();
         ret.clearTime();
 
         if (["NOW", "N"].indexOf(dateUpper) >= 0) {
             ret = new Date();
-
         } else if (["TODAY", "T"].indexOf(dateUpper) >= 0) {
             //do nothing
-
         } else if (["YESTERDAY", "Y"].indexOf(dateUpper) >= 0) {
             ret.setDate(ret.getDate() - 1);
-
         } else if (["TOMORROW", "TO"].indexOf(dateUpper) >= 0) {
             ret.setDate(ret.getDate() + 1);
-
         } else if (["W", "TW", "WEEK", "THISWEEK", "WEEKSTART", "THISWEEKSTART"].indexOf(dateUpper) >= 0) {
             ret.setFirstDayOfThisWeek();
-
         } else if (["LW", "LASTWEEK", "LASTWEEKSTART"].indexOf(dateUpper) >= 0) {
             ret.setFirstDayOfThisWeek();
             ret.setDate(ret.getDate() - 7);
-
         } else if (["NW", "NEXTWEEK", "NEXTWEEKSTART"].indexOf(dateUpper) >= 0) {
             ret.setFirstDayOfThisWeek();
             ret.setDate(ret.getDate() + 7);
-
         } else if (["M", "TM", "MONTH", "THISMONTH", "MONTHSTART", "THISMONTHSTART"].indexOf(dateUpper) >= 0) {
             ret.setDate(1);
-
         } else if (["LM", "LASTMONTH", "LASTMONTHSTART"].indexOf(dateUpper) >= 0) {
             ret.setDate(1);
             ret.setMonth(ret.getMonth() - 1);
-
         } else if (["NM", "NEXTMONTH", "NEXTMONTHSTART"].indexOf(dateUpper) >= 0) {
             ret.setDate(1);
             ret.setMonth(ret.getMonth() + 1);
-
         } else if (["Q", "TQ", "QUARTER", "THISQUARTER", "QUARTERSTART", "THISQUARTERSTART"].indexOf(dateUpper) >= 0) {
             ret.setDate(1);
             ret.setMonth(Math.floor((ret.getMonth()) / 3) * 3);
-
         } else if (["LQ", "LASTQUARTER", "LASTQUARTERSTART"].indexOf(dateUpper) >= 0) {
             ret.setDate(1);
             ret.setMonth(Math.floor((ret.getMonth()) / 3) * 3 - 3);
-
         } else if (["NQ", "NEXTQUARTER", "NEXTQUARTERSTART"].indexOf(dateUpper) >= 0) {
             ret.setDate(1);
             ret.setMonth(Math.floor((ret.getMonth()) / 3) * 3 + 3);
-
-
         } else if (/^-?[0-9]+[DWMY]$/.test(dateUpper)) {
-            var lastOne = dateUpper.substr(dateUpper.length - 1);
-            var val = parseInt(dateUpper.substr(0, dateUpper.length - 1));
-            if (lastOne == "W")
+            const lastOne = dateUpper.substr(dateUpper.length - 1);
+            const val = parseInt(dateUpper.substr(0, dateUpper.length - 1));
+            if (lastOne == "W") {
                 ret.setDate(ret.getDate() + val * 7);
-            else if (lastOne == "M")
+            } else if (lastOne == "M") {
                 ret.setMonth(ret.getMonth() + val);
-            else if (lastOne == "Y")
+            } else if (lastOne == "Y") {
                 ret.setYear(ret.getYear() + val);
+            }
         } else {
             ret = undefined;
         }
@@ -157,33 +143,37 @@ Date.parseString = function (val, format, lenient) {
         return ret;
     };
 
-    var ret = this.decodeShortcut(val);
-    if (ret)
+    const ret = this.decodeShortcut(val);
+    if (ret) {
         return ret;
+    }
 
     this._getDate = function (val, format) {
+        let names;
+        let i;
         val = val + "";
         format = format + "";
-        var i_val = 0;
-        var i_format = 0;
-        var c = "";
-        var token = "";
-        var token2 = "";
-        var x, y;
-        var year = new Date().getFullYear();
-        var month = 1;
-        var date = 1;
-        var hh = 0;
-        var mm = 0;
-        var ss = 0;
-        var ampm = "";
+        let i_val = 0;
+        let i_format = 0;
+        let c = "";
+        let token = "";
+        const token2 = "";
+        let x, y;
+        let year = new Date().getFullYear();
+        let month = 1;
+        let date = 1;
+        let hh = 0;
+        let mm = 0;
+        let ss = 0;
+        let ampm = "";
         while (i_format < format.length) {
             // Get next token from format string
             c = format.charAt(i_format);
             token = "";
-            while ((format.charAt(i_format) == c) && (i_format < format.length)) {
+            while ((format.charAt(i_format) === c) && (i_format < format.length)) {
                 token += format.charAt(i_format++);
             }
+
             // Extract contents of value based on format token
             if (token == "yyyy" || token == "yy" || token == "y") {
                 if (token == "yyyy") {
@@ -203,7 +193,7 @@ Date.parseString = function (val, format, lenient) {
                     return null;
                 }
                 i_val += year.length;
-                if (year.length == 2) {
+                if (year.length === 2) {
                     if (year > 70) {
                         year = 1900 + (year - 0);
                     } else {
@@ -214,21 +204,22 @@ Date.parseString = function (val, format, lenient) {
                 //		} else if (token=="MMM" || token=="NNN"){
             } else if (token == "MMM" || token == "MMMM") {
                 month = 0;
-                var names = (token == "MMMM" ? (Date.monthNames.concat(Date.monthAbbreviations)) : Date.monthAbbreviations);
-                for (var i = 0; i < names.length; i++) {
-                    var month_name = names[i];
+                names = (token == "MMMM" ? (Date.monthNames.concat(Date.monthAbbreviations)) : Date.monthAbbreviations);
+                for (i = 0; i < names.length; i++) {
+                    const month_name = names[i];
                     if (val.substring(i_val, i_val + month_name.length).toLowerCase() == month_name.toLowerCase()) {
                         month = (i % 12) + 1;
                         i_val += month_name.length;
                         break;
                     }
                 }
+
                 if ((month < 1) || (month > 12)) {
                     return null;
                 }
             } else if (token == "E" || token == "EE" || token == "EEE" || token == "EEEE") {
-                var names = (token == "EEEE" ? Date.dayNames : Date.dayAbbreviations);
-                for (var i = 0; i < names.length; i++) {
+                names = (token == "EEEE" ? Date.dayNames : Date.dayAbbreviations);
+                for (i = 0; i < names.length; i++) {
                     var day_name = names[i];
                     if (val.substring(i_val, i_val + day_name.length).toLowerCase() == day_name.toLowerCase()) {
                         i_val += day_name.length;
@@ -333,18 +324,16 @@ Date.parseString = function (val, format, lenient) {
         return new Date(year, month - 1, date, hh, mm, ss);
     };
 
-    var theDate = this._getDate(val, format);
+    const theDate = this._getDate(val, format);
     if (!theDate && lenient) {
         //try with short format
-        var f = format.replace("MMMM", "M").replace("MMM", "M").replace("MM", "M")
+        const f = format.replace("MMMM", "M").replace("MMM", "M").replace("MM", "M")
             .replace("yyyy", "y").replace("yyy", "y").replace("yy", "y")
             .replace("dd", "d");
-        //console.debug("second round with format "+f);
         return this._getDate(val, f);
     } else {
         return theDate;
     }
-
 };
 
 // Check if a date string is valid
@@ -369,23 +358,16 @@ Date.prototype.isAfter = function (date2) {
 };
 
 Date.prototype.isOutOfRange = function (minDate, maxDate) {
-
     minDate = minDate || this;
     maxDate = maxDate || this;
 
-    if (typeof minDate == "string")
+    if (typeof minDate == "string") {
         minDate = Date.parseString(minDate);
+    }
 
-    if (typeof maxDate == "string")
+    if (typeof maxDate == "string") {
         maxDate = Date.parseString(maxDate);
-
-
-    /*
-     console.debug("date:: ", this);
-     console.debug("minDate:: ", minDate);
-     console.debug("maxDate:: ", maxDate);
-     console.debug("isDisabled:: ", this.isBefore(minDate) , this.isAfter(maxDate));
-     */
+    }
 
     return (this.isBefore(minDate) || this.isAfter(maxDate));
 };
@@ -403,8 +385,8 @@ Date.prototype.equalsIgnoreTime = function (date2) {
     if (date2 == null) {
         return false;
     }
-    var d1 = new Date(this.getTime()).clearTime();
-    var d2 = new Date(date2.getTime()).clearTime();
+    const d1 = new Date(this.getTime()).clearTime();
+    const d2 = new Date(date2.getTime()).clearTime();
     return (d1.getTime() == d2.getTime());
 };
 
@@ -420,26 +402,29 @@ Date.prototype.getWeekNumber = function () {
 
 // Format a date into a string using a given format string
 Date.prototype.format = function (format) {
-    if (!format)
+    if (!format) {
         format = Date.defaultFormat;
+    }
+
     format = format + "";
-    var result = "";
-    var i_format = 0;
-    var c = "";
-    var token = "";
-    var y = this.getFullYear() + "";
-    var M = this.getMonth() + 1;
-    var d = this.getDate();
-    var E = this.getDay();
-    var H = this.getHours();
-    var m = this.getMinutes();
-    var s = this.getSeconds();
-    var w = this.getWeekNumber();
+    let result = "";
+    let i_format = 0;
+    let c = "";
+    let token = "";
+    let y = this.getFullYear() + "";
+    const M = this.getMonth() + 1;
+    const d = this.getDate();
+    const E = this.getDay();
+    const H = this.getHours();
+    const m = this.getMinutes();
+    const s = this.getSeconds();
+    const w = this.getWeekNumber();
     // Convert real date parts into formatted versions
-    var value = new Object();
+    const value = new Object();
     if (y.length < 4) {
         y = "" + (+y + 1900);
     }
+
     value["y"] = "" + y;
     value["yyyy"] = y;
     value["yy"] = y.substring(2, 4);
@@ -457,6 +442,7 @@ Date.prototype.format = function (format) {
     value["HH"] = Date.LZ(H);
     value["w"] = w;
     value["ww"] = Date.LZ(w);
+
     if (H == 0) {
         value["h"] = 12;
     } else if (H > 12) {
@@ -464,11 +450,13 @@ Date.prototype.format = function (format) {
     } else {
         value["h"] = H;
     }
+
     value["hh"] = Date.LZ(value["h"]);
     value["K"] = value["h"] - 1;
     value["k"] = value["H"] + 1;
     value["KK"] = Date.LZ(value["K"]);
     value["kk"] = Date.LZ(value["k"]);
+
     if (H > 11) {
         value["a"] = "PM";
     } else {
@@ -567,7 +555,6 @@ Date.prototype.isToday = function () {
     return this.toInt() == new Date().toInt();
 };
 
-
 Date.prototype.incrementDateByWorkingDays = function (days) {
     //console.debug("incrementDateByWorkingDays start ",d,days)
     var q = Math.abs(days);
@@ -579,7 +566,6 @@ Date.prototype.incrementDateByWorkingDays = function (days) {
     return this;
 };
 
-
 Date.prototype.distanceInDays = function (toDate) {
     // Discard the time and time-zone information.
     var utc1 = Date.UTC(this.getFullYear(), this.getMonth(), this.getDate());
@@ -588,36 +574,19 @@ Date.prototype.distanceInDays = function (toDate) {
 };
 
 //low performances in case of long distance
-/*Date.prototype.distanceInWorkingDays= function (toDate){
-  var pos = new Date(this.getTime());
-  pos.setHours(23, 59, 59, 999);
-  var days = 0;
-  var nd=new Date(toDate.getTime());
-  nd.setHours(23, 59, 59, 999);
-  var end=nd.getTime();
-  while (pos.getTime() <= end) {
-    days = days + (isHoliday(pos) ? 0 : 1);
-    pos.setDate(pos.getDate() + 1);
-  }
-  return days;
-};*/
-
-//low performances in case of long distance
 // bicch 22/4/2016: modificato per far ritornare anche valori negativi, così come la controparte Java in CompanyCalendar.
 // attenzione che prima tornava 1 per due date uguali adesso torna 0
 Date.prototype.distanceInWorkingDays = function (toDate) {
-    var pos = new Date(Math.min(this, toDate));
+    const pos = new Date(Math.min(this, toDate));
     pos.setHours(12, 0, 0, 0);
-    var days = 0;
-    var nd = new Date(Math.max(this, toDate));
+    let days = 0;
+    const nd = new Date(Math.max(this, toDate));
     nd.setHours(12, 0, 0, 0);
     while (pos < nd) {
         days = days + (isHoliday(pos) ? 0 : 1);
         pos.setDate(pos.getDate() + 1);
     }
     days = days * (this > toDate ? -1 : 1);
-
-    //console.debug("distanceInWorkingDays",this,toDate,days);
     return days;
 };
 
@@ -627,7 +596,6 @@ Date.prototype.setFirstDayOfThisWeek = function (firstDayOfWeek) {
     this.setDate(this.getDate() - this.getDay() + firstDayOfWeek - (this.getDay() == 0 && firstDayOfWeek != 0 ? 7 : 0));
     return this;
 };
-
 
 /* ----- millis format --------- */
 /**
@@ -645,9 +613,11 @@ function pad(str, len, ch) {
 }
 
 function getMillisInHours(millis) {
-    if (!millis)
+    if (!millis) {
         return "";
-    var hour = Math.floor(millis / 3600000);
+    }
+
+    const hour = Math.floor(millis / 3600000);
     return (millis >= 0 ? "" : "-") + pad(hour, 1, "0");
 }
 
@@ -655,90 +625,85 @@ function getMillisInHoursMinutes(millis) {
     if (typeof (millis) != "number")
         return "";
 
-    var sgn = millis >= 0 ? 1 : -1;
+    const sgn = millis >= 0 ? 1 : -1;
     millis = Math.abs(millis);
-    var hour = Math.floor(millis / 3600000);
-    var min = Math.floor((millis % 3600000) / 60000);
+    const hour = Math.floor(millis / 3600000);
+    const min = Math.floor((millis % 3600000) / 60000);
     return (sgn > 0 ? "" : "-") + pad(hour, 1, "0") + ":" + pad(min, 2, "0");
 }
 
 function getMillisInDaysHoursMinutes(millis) {
-    if (!millis)
+    if (!millis) {
         return "";
+    }
+
     // millisInWorkingDay is set on partHeaderFooter
-    var sgn = millis >= 0 ? 1 : -1;
+    const sgn = millis >= 0 ? 1 : -1;
     millis = Math.abs(millis);
-    var days = Math.floor(millis / millisInWorkingDay);
-    var hour = Math.floor((millis % millisInWorkingDay) / 3600000);
-    var min = Math.floor((millis - days * millisInWorkingDay - hour * 3600000) / 60000);
+    const days = Math.floor(millis / millisInWorkingDay);
+    const hour = Math.floor((millis % millisInWorkingDay) / 3600000);
+    const min = Math.floor((millis - days * millisInWorkingDay - hour * 3600000) / 60000);
     return (sgn >= 0 ? "" : "-") + (days > 0 ? days + "  " : "") + pad(hour, 1, "0") + ":" + pad(min, 2, "0");
 }
 
-
 function millisToString(millis, considerWorkingdays) {
-    // console.debug("millisToString",millis)
-    if (!millis)
+    if (!millis) {
         return "";
+    }
+
     // millisInWorkingDay is set on partHeaderFooter
-    var sgn = millis >= 0 ? 1 : -1;
+    const sgn = millis >= 0 ? 1 : -1;
     millis = Math.abs(millis);
-    var wm = (considerWorkingdays ? millisInWorkingDay : 3600000 * 24);
-    var days = Math.floor(millis / wm);
-    var hour = Math.floor((millis % wm) / 3600000);
-    var min = Math.floor((millis - days * wm - hour * 3600000) / 60000);
-    var sec = Math.floor((millis - days * wm - hour * 3600000 - min * 60000) / 1000);
-    //console.debug("millisToString",wm, millis,days,hour,min)
+    const wm = (considerWorkingdays ? millisInWorkingDay : 3600000 * 24);
+    const days = Math.floor(millis / wm);
+    const hour = Math.floor((millis % wm) / 3600000);
+    const min = Math.floor((millis - days * wm - hour * 3600000) / 60000);
+    const sec = Math.floor((millis - days * wm - hour * 3600000 - min * 60000) / 1000);
     return (sgn >= 0 ? "" : "-") + (days > 0 ? days + "d " : "") + (hour > 0 ? (days > 0 ? " " : "") + hour + "h" : "") + (min > 0 ? (days > 0 || hour > 0 ? " " : "") + min + "m" : "") + (sec > 0 ? +sec + "s" : "");
 }
 
-
 function millisFromHourMinute(stringHourMinutes) { //All this format are valid: "12:58" "13.75"  "63635676000" (this is already in milliseconds)
-    var semiColSeparator = stringHourMinutes.indexOf(":");
+    const semiColSeparator = stringHourMinutes.indexOf(":");
     if (semiColSeparator == 0) // :30 minutes
         return millisFromHourMinuteSecond("00" + stringHourMinutes + ":00");
     else if (semiColSeparator > 0) // 1:15 hours:minutes
         return millisFromHourMinuteSecond(stringHourMinutes + ":00");
     else
         return millisFromHourMinuteSecond(stringHourMinutes);
-
 }
 
 function millisFromHourMinuteSecond(stringHourMinutesSeconds) { //All this format are valid: "00:12:58" "12:58:55" "13.75"  "63635676000" (this is already in milliseconds)
-    var result = 0;
+    let result = 0;
     stringHourMinutesSeconds.replace(",", ".");
-    var semiColSeparator = stringHourMinutesSeconds.indexOf(":");
-    var dotSeparator = stringHourMinutesSeconds.indexOf(".");
+    const semiColSeparator = stringHourMinutesSeconds.indexOf(":");
+    const dotSeparator = stringHourMinutesSeconds.indexOf(".");
 
     if (semiColSeparator < 0 && dotSeparator < 0 && stringHourMinutesSeconds.length > 5) {
         return parseInt(stringHourMinutesSeconds, 10); //already in millis
     } else {
-
         if (dotSeparator > -1) {
-            var d = parseFloat(stringHourMinutesSeconds);
+            const d = parseFloat(stringHourMinutesSeconds);
             result = d * 3600000;
         } else {
-            var hour = 0;
-            var minute = 0;
-            var second = 0;
-
-            if (semiColSeparator == -1)
+            let hour = 0;
+            let minute = 0;
+            let second = 0;
+            if (semiColSeparator == -1) {
                 hour = parseInt(stringHourMinutesSeconds, 10);
-            else {
-
-                var units = stringHourMinutesSeconds.split(":")
-
+            } else {
+                const units = stringHourMinutesSeconds.split(":");
                 hour = parseInt(units[0], 10);
                 minute = parseInt(units[1], 10);
                 second = parseInt(units[2], 10);
             }
             result = hour * 3600000 + minute * 60000 + second * 1000;
         }
-        if (typeof (result) != "number")
+        if (typeof (result) != "number") {
             result = NaN;
+        }
         return result;
     }
 }
-
 
 /**
  * @param string              "3y 4d", "4D:08:10", "12M/3d", "1.5D", "2H4D", "3M4d,2h", "12:30", "11", "3", "1.5", "2m/3D", "12/3d", "1234"
@@ -747,28 +712,29 @@ function millisFromHourMinuteSecond(stringHourMinutesSeconds) { //All this forma
  * @return milliseconds. 0 if invalid string
  */
 function millisFromString(string, considerWorkingdays) {
-    if (!string)
+    if (!string) {
         return 0;
+    }
 
-    //var regex = new RegExp("(\\d+[Yy])|(\\d+[M])|(\\d+[Ww])|(\\d+[Dd])|(\\d+[Hh])|(\\d+[m])|(\\d+[Ss])|(\\d+:\\d+)|(:\\d+)|(\\d*[\\.,]\\d+)|(\\d+)", "g"); // bicch 14/1/16 supporto per 1.5d
-    var regex = new RegExp("([0-9\\.,]+[Yy])|([0-9\\.,]+[Qq])|([0-9\\.,]+[M])|([0-9\\.,]+[Ww])|([0-9\\.,]+[Dd])|([0-9\\.,]+[Hh])|([0-9\\.,]+[m])|([0-9\\.,]+[Ss])|(\\d+:\\d+:\\d+)|(\\d+:\\d+)|(:\\d+)|(\\d*[\\.,]\\d+)|(\\d+)", "g");
+    const regex = new RegExp("([0-9\\.,]+[Yy])|([0-9\\.,]+[Qq])|([0-9\\.,]+[M])|([0-9\\.,]+[Ww])|([0-9\\.,]+[Dd])|([0-9\\.,]+[Hh])|([0-9\\.,]+[m])|([0-9\\.,]+[Ss])|(\\d+:\\d+:\\d+)|(\\d+:\\d+)|(:\\d+)|(\\d*[\\.,]\\d+)|(\\d+)", "g");
+    let matcher = regex.exec(string);
+    let totMillis = 0;
 
-    var matcher = regex.exec(string);
-    var totMillis = 0;
-
-    if (!matcher)
+    if (!matcher) {
         return NaN;
+    }
 
     while (matcher != null) {
-        for (var i = 1; i < matcher.length; i++) {
-            var match = matcher[i];
+        for (let i = 1; i < matcher.length; i++) {
+            const match = matcher[i];
             if (match) {
-                var number = 0;
+                let number = 0;
                 try {
                     //number = parseInt(match); // bicch 14/1/16 supporto per 1.5d
                     number = parseFloat(match.replace(',', '.'));
                 } catch (e) {
                 }
+
                 if (i == 1) { // years
                     totMillis = totMillis + number * (considerWorkingdays ? millisInWorkingDay * workingDaysPerWeek * 52 : 3600000 * 24 * 365);
                 } else if (i == 2) { // quarter
@@ -811,29 +777,29 @@ function millisFromString(string, considerWorkingdays) {
  * @return milliseconds. 0 if invalid string
  */
 function daysFromString(string, considerWorkingdays) {
-    if (!string)
+    if (!string) {
         return undefined;
+    }
 
-    //var regex = new RegExp("(\\d+[Yy])|(\\d+[Mm])|(\\d+[Ww])|(\\d+[Dd])|(\\d*[\\.,]\\d+)|(\\d+)", "g"); // bicch 14/1/16 supporto per 1.5d
-    //var regex = new RegExp("([0-9\\.,]+[Yy])|([0-9\\.,]+[Qq])|([0-9\\.,]+[Mm])|([0-9\\.,]+[Ww])|([0-9\\.,]+[Dd])|(\\d*[\\.,]\\d+)|(\\d+)", "g");
-    var regex = new RegExp("([\\-]?[0-9\\.,]+[Yy])|([\\-]?[0-9\\.,]+[Qq])|([\\-]?[0-9\\.,]+[Mm])|([\\-]?[0-9\\.,]+[Ww])|([\\-]?[0-9\\.,]+[Dd])|([\\-]?\\d*[\\.,]\\d+)|([\\-]?\\d+)", "g");
+    const regex = new RegExp("([\\-]?[0-9\\.,]+[Yy])|([\\-]?[0-9\\.,]+[Qq])|([\\-]?[0-9\\.,]+[Mm])|([\\-]?[0-9\\.,]+[Ww])|([\\-]?[0-9\\.,]+[Dd])|([\\-]?\\d*[\\.,]\\d+)|([\\-]?\\d+)", "g");
+    let matcher = regex.exec(string);
+    let totDays = 0;
 
-    var matcher = regex.exec(string);
-    var totDays = 0;
-
-    if (!matcher)
+    if (!matcher) {
         return NaN;
+    }
 
     while (matcher != null) {
-        for (var i = 1; i < matcher.length; i++) {
-            var match = matcher[i];
+        for (let i = 1; i < matcher.length; i++) {
+            const match = matcher[i];
             if (match) {
-                var number = 0;
+                let number = 0;
                 try {
                     number = parseInt(match);// bicch 14/1/16 supporto per 1.5d
                     number = parseFloat(match.replace(',', '.'));
                 } catch (e) {
                 }
+
                 if (i == 1) { // years
                     totDays = totDays + number * (considerWorkingdays ? workingDaysPerWeek * 52 : 365);
                 } else if (i == 2) { // quarter

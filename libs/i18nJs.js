@@ -20,17 +20,16 @@
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 function dateToRelative(localTime) {
-    var diff = new Date().getTime() - localTime;
-    var ret = "";
+    const diff = new Date().getTime() - localTime;
+    let ret = "";
 
-    var min = 60000;
-    var hour = 3600000;
-    var day = 86400000;
-    var wee = 604800000;
-    var mon = 2629800000;
-    var yea = 31557600000;
+    const min = 60000;
+    const hour = 3600000;
+    const day = 86400000;
+    const wee = 604800000;
+    const mon = 2629800000;
+    const yea = 31557600000;
 
     if (diff < -yea * 2)
         ret = "in ## years".replace("##", (-diff / yea).toFixed(0));
@@ -88,7 +87,6 @@ function dateToRelative(localTime) {
 
     else if (diff <= mon * 12)
         ret = "## months ago".replace("##", (diff / mon).toFixed(0));
-
     else
         ret = "## years ago".replace("##", (diff / yea).toFixed(0));
 
@@ -105,7 +103,7 @@ Date.dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday
 // Day abbreviations. Change this for local month names
 Date.dayAbbreviations = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 // Used for parsing ambiguous dates like 1/2/2000 - default to preferring 'American' format meaning Jan 2.
-// Set to false to prefer 'European' format meaning Feb 1
+// Set false to prefer 'European' format meaning Feb 1
 Date.preferAmericanFormat = false;
 
 Date.firstDayOfWeek = 0;
@@ -121,25 +119,23 @@ Number.groupingSeparator = ",";
 Number.minusSign = "-";
 Number.currencyFormat = "###,##0.00";
 
-
-var millisInWorkingDay = 28800000;
-var workingDaysPerWeek = 5;
+let millisInWorkingDay = 28800000;
+const workingDaysPerWeek = 5;
 
 function isHoliday(date) {
-    var friIsHoly = false;
-    var satIsHoly = true;
-    var sunIsHoly = true;
+    const friIsHoly = false;
+    const satIsHoly = true;
+    const sunIsHoly = true;
 
-    var pad = function (val) {
+    const pad = function (val) {
         val = "0" + val;
         return val.substr(val.length - 2);
     };
 
-    var holidays = "##";
-
-    var ymd = "#" + date.getFullYear() + "_" + pad(date.getMonth() + 1) + "_" + pad(date.getDate()) + "#";
-    var md = "#" + pad(date.getMonth() + 1) + "_" + pad(date.getDate()) + "#";
-    var day = date.getDay();
+    const holidays = "##";
+    const ymd = "#" + date.getFullYear() + "_" + pad(date.getMonth() + 1) + "_" + pad(date.getDate()) + "#";
+    const md = "#" + pad(date.getMonth() + 1) + "_" + pad(date.getDate()) + "#";
+    const day = date.getDay();
 
     return (day == 5 && friIsHoly) || (day == 6 && satIsHoly) || (day == 0 && sunIsHoly) || holidays.indexOf(ymd) > -1 || holidays.indexOf(md) > -1;
 }
