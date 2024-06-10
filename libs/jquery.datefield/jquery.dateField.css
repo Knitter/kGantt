@@ -52,17 +52,17 @@
 }
 
 .calElement.prev {
-    background: transparent url(img/prev.png) no-repeat 5px center;
+    background: transparent url(libs/dateField/img/prev.png) no-repeat 5px center;
     float: left;
 }
 
 .calElement.goToday {
-    background: transparent url(img/today.png) no-repeat 5px center;
+    background: transparent url(libs/dateField/img/today.png) no-repeat 5px center;
     float: left;
 }
 
 .calElement.next {
-    background: transparent url(img/next.png) no-repeat 5px center;
+    background: transparent url(libs/dateField/img/next.png) no-repeat 5px center;
     float: right;
 }
 
